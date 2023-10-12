@@ -3,7 +3,9 @@
 # fCN <- function(cn, ROM) {
 #   CNfraction = min(56.2 * cn ^ (-1.69), 1) }
 
-pool_cn <- function(cn, HUM_frac, C_0) {
+pool_cn <- function(cn,
+                    HUM_frac,
+                    C_0) {
   CNfraction = min(56.2 * cn ^ (-1.69), 1)
 
   HUM = C_0 * HUM_frac * CNfraction
@@ -13,13 +15,18 @@ pool_cn <- function(cn, HUM_frac, C_0) {
 }
 
 
-allo <- function(HI, SB, RE, RB, yield_MC, yield_CC) {
+allo <- function(HI,
+                 SB,
+                 RE,
+                 RB,
+                 yield_MC,
+                 yield_CC,
+                 Ccont=0.43) {
+  Cresid = as.numeric(((1 / HI) - 1 - SB) * (yield_MC * Ccont))
+  Cresid_cc = as.numeric(((1 / HI) - 1 - SB) * (yield_CC * Ccont))
 
-  Cresid = as.numeric(((1 / HI) - 1 - SB) * (yield_MC * 0.43))
-  Cresid_cc = as.numeric(((1 / HI) - 1 - SB) * (yield_CC * 0.43))
-
-  Cbelow = as.numeric((RB / ((1 - RB) * HI)) * (yield_MC * 0.43))
-  Cbelow_cc = as.numeric((RB / ((1 - RB) * HI)) * (yield_CC * 0.43))
+  Cbelow = as.numeric((RB / ((1 - RB) * HI)) * (yield_MC * Ccont))
+  Cbelow_cc = as.numeric((RB / ((1 - RB) * HI)) * (yield_CC * Ccont))
 
   Ctop = ifelse(Cresid < 0, 0 + (RE * Cbelow), Cresid + (RE * Cbelow))
   ifelse(Cresid_cc < 0, 0 + (RE * Cbelow_cc), Cresid_cc + (RE * Cbelow_cc))
@@ -30,3 +37,4 @@ allo <- function(HI, SB, RE, RB, yield_MC, yield_CC) {
 
   c(Ctop, Csub, Cman)
 }
+

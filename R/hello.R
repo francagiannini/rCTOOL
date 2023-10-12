@@ -8,6 +8,7 @@
 #' hello()
 
 hello <- function() {
-  print("Hello, muggles!")
+  print("Hello, muggles this is naive Fran overestimating herself!")
 }
 
+hello
