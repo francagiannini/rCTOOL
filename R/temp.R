@@ -3,11 +3,11 @@
 soil_temp <-
   function(depth,
            month,
-           T_ave = temp_m,
-           A_0 = temp_amp,
+           T_ave ,
+           A_0 ,
            th_diff) {
     #function(j) {
-    browser()
+    #browser()
     # depth in meters#
 
     z = depth / 2 * 0.01
@@ -39,6 +39,7 @@ soil_temp <-
 
 temp_coef <-
   function(T_zt) {
-  7.24 * exp(-3.432 + 0.168 * T_zt * (1 - 0.5 * T_zt / 36.9))
+    temp_coef = 7.24 * exp(-3.432 + 0.168 * T_zt * (1 - 0.5 * T_zt / 36.9))
 
+    temp_coef
 }
