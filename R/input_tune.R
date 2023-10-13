@@ -11,7 +11,7 @@ pool_cn <- function(cn,
   HUM = C_0 * HUM_frac * CNfraction
   ROM = C_0 - HUM
 
-  c(HUM,ROM)
+  c("HUM"=HUM,"ROM"=ROM)
 }
 
 
