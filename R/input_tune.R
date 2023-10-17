@@ -1,4 +1,19 @@
-
+#' Initial pool distribution parametrization
+#'
+#' This function helps to modify the parametrization of the initial pool distribution
+#' according thesoil  C/N ratio.
+#' When the C/N ratio is above the threshold of 10.8, the initial content of C in ROM is adjusted upwards, so that the relative turnover
+#'rate is adjusted to the level determined by the function. The use of this procedure has a significant
+#'influence for national simulations, as there is a significant proportion of coarse sandy soils in
+#'Denmark with a high C/N ratio. If such a function is not used, the simulation of Danish sandy soils
+#'will exhibit clear declines in SOC, in contrast to the general build-up of SOC on these soils reported
+#'by Heidmann et al. (2001).
+#'
+#' @return The arguments are: cn;HUM_frac;C_0
+#' @export
+#' @examples
+#' pool_cn(cn=12,HUM_frac = 0.33, C_0=75)
+#' pool_cn(cn=8,HUM_frac = 0.33, C_0=75)
 
 # fCN <- function(cn, ROM) {
 #   CNfraction = min(56.2 * cn ^ (-1.69), 1) }
@@ -14,6 +29,16 @@ pool_cn <- function(cn,
   c("FOM"=0,"HUM"=HUM,"ROM"=ROM)
 }
 
+pool_cn
+
+#' C input calculation
+#'
+#' Simple allometrics function to estimates of C input to the soil from information of yield
+#'amounts. Calculations of total C (Mg/ha) deposited in top and sub soil
+#'
+#' @return The arguments are:
+#' @export
+#' @examples
 
 allo <- function(yield_MC,
                  yield_CC,
@@ -40,3 +65,4 @@ allo <- function(yield_MC,
   c(Ctop, Csub, Cman)
 }
 
+allo

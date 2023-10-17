@@ -4,7 +4,7 @@
 \alias{hello}
 \title{Print a greeting message}
 \usage{
-hello()
+hello(who)
 }
 \value{
 NULL (prints the greeting message)

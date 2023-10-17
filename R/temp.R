@@ -1,4 +1,10 @@
+#'Soil temperature function'
+#'
 
+
+#' @return The arguments are:
+#' @export
+#' @examples
 
 soil_temp <-
   function(depth,
@@ -35,7 +41,14 @@ soil_temp <-
   }
 
 
-# temp coefficient uniti at 10 C¤
+#'Temperature Coefficient function'
+#'
+
+
+#' @return The arguments are:
+#' @export
+#' @examples
+
 
 temp_coef <-
   function(T_zt) {
@@ -43,3 +56,5 @@ temp_coef <-
 
     temp_coef
 }
+
+temp_coef

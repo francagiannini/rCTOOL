@@ -7,8 +7,8 @@
 #' @examples
 #' hello()
 
-hello <- function() {
-  print("Hello, muggles this is naive Fran overestimating herself!")
+hello <- function(who) {
+  paste("Hello, muggles this is naive:",paste(who), "overestimating herself!")
 }
 
 hello
