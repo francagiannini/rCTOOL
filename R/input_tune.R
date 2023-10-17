@@ -15,13 +15,15 @@ pool_cn <- function(cn,
 }
 
 
-allo <- function(HI,
+allo <- function(yield_MC,
+                 yield_CC,
+                 C_manure,
+                 HI,
                  SB,
                  RE,
                  RB,
-                 yield_MC,
-                 yield_CC,
                  Ccont=0.43) {
+
   Cresid = as.numeric(((1 / HI) - 1 - SB) * (yield_MC * Ccont))
   Cresid_cc = as.numeric(((1 / HI) - 1 - SB) * (yield_CC * Ccont))
 
