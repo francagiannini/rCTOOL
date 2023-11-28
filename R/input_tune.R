@@ -18,15 +18,29 @@
 # fCN <- function(cn, ROM) {
 #   CNfraction = min(56.2 * cn ^ (-1.69), 1) }
 
+# pool_cn <- function(cn,
+#                     HUM_frac,
+#                     C_0) {
+#   CNfraction = min(56.2 * cn ^ (-1.69), 1)
+#
+#   HUM = C_0 * HUM_frac * CNfraction
+#   ROM = C_0 - HUM
+#
+#   c("FOM"=0,"HUM"=HUM,"ROM"=ROM)
+# }
+
+
 pool_cn <- function(cn,
                     HUM_frac,
+                    ROM_frac,
                     C_0) {
   CNfraction = min(56.2 * cn ^ (-1.69), 1)
 
+  FOM = 1-HUM_frac-ROM_frac
   HUM = C_0 * HUM_frac * CNfraction
-  ROM = C_0 - HUM
+  ROM = C_0 -HUM- FOM
 
-  c("FOM"=0,"HUM"=HUM,"ROM"=ROM)
+  c("FOM"=FOM,"HUM"=HUM,"ROM"=ROM)
 }
 
 pool_cn
