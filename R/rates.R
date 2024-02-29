@@ -9,9 +9,9 @@
 #' @export
 #' @examples
 
-decay <- function(amount_t, k, tempCoefficient ){
-  amount = amount_t * (-k * tempCoefficient)
-  amount
+decay <- function(C0_t, k, tempCoefficient ){
+  deltaC_substrate = C0_t * (-k * tempCoefficient)
+  deltaC_substrate
 }
 
 decay

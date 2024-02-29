@@ -15,19 +15,15 @@ soil_temp <-
     #function(j) {
     #browser()
     # depth in meters#
-
     z = depth / 2 * 0.01
 
-    #temporal position in daily bases setted as the last day of each month
-
+    #temporal position in daily bases set as the last day of each month
     t = month
 
     #angular frequency
     # here the cycle is daily, for secondly cycles (365 * 24 * 3600)
-
     rho <-
       pi * 2 / 365 #as.numeric(j["daysinmonth"]) #/30#
-
 
     # Damping depth here in m
     D <- sqrt(2 * th_diff / rho)
