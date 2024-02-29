@@ -7,7 +7,7 @@
 
 # i refers to the time step
 
-turnoverkl <- function(i) {
+turnover <- function(i) {
 
   result_pools <- result_pools[i - 1, ]
   result_pools <- as.data.frame(t(result_pools))
