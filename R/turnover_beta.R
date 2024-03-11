@@ -209,7 +209,7 @@ turnover <- function(i) {
     ROM_sub +
     decay(
       C0_t = ROM_sub,
-      k = kHUM,
+      k = kROM,
       tempCoefficient =  temp_coef(
         T_zt = soil_temp(
           depth = 100,
