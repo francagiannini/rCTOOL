@@ -4,7 +4,7 @@
 \alias{decay}
 \title{Decay of carbon function'}
 \usage{
-decay(amount_t, k, tempCoefficient)
+decay(C0_t, k, tempCoefficient)
 }
 \value{
 The arguments are:

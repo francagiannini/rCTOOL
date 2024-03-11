@@ -4,7 +4,7 @@
 \alias{pool_cn}
 \title{Initial pool distribution parametrization}
 \usage{
-pool_cn(cn, HUM_frac, C_0)
+pool_cn(cn, HUM_frac, ROM_frac, C_0)
 }
 \value{
 The arguments are: cn;HUM_frac;C_0

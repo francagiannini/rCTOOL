@@ -224,7 +224,7 @@ turnover <- function(i) {
   substrate_ROM_decomp_sub <- ROM_sub - ROM_after_decomp_sub
 
   CO2_ROM_sub <-
-    substrate_ROM_decomp_top * fco2
+    substrate_ROM_decomp_sub * fco2
 
   ROM_sub <- ROM_sub - CO2_ROM_sub
 
@@ -246,7 +246,7 @@ turnover <- function(i) {
       "C_topsoil" = FOM_top + HUM_top + ROM_top,
       "C_subsoil" = FOM_sub + HUM_sub + ROM_sub,
 
-      "FOM_tr" = NA,
+      "FOM_tr" = FOM_tr,
       "HUM_tr" = HUM_tr,
       "ROM_tr" = ROM_tr,
 
