@@ -263,11 +263,11 @@ turnover <- function(i) {
       "C_CO2_top" = CO2_FOM_top + CO2_HUM_top + CO2_ROM_top,
       "C_CO2_sub" = CO2_FOM_sub + CO2_HUM_sub + CO2_ROM_sub,
 
-      "Cinp_top" = C_input_top[y] * month_prop[m],
-      "Cinp_sub" = C_input_sub[y] * month_prop[m],
-      "Cinp_man"= C_input_man[y] * month_prop[m],
-      "T_ave" = T_ave[result_pools[, "step"]],
-      "A_0" = T_range[result_pools[, "step"]]
+      # "Cinp_top" = C_input_top[y] * month_prop[m],
+      # "Cinp_sub" = C_input_sub[y] * month_prop[m],
+      # "Cinp_man"= C_input_man[y] * month_prop[m],
+      # "T_ave" = T_ave[result_pools[, "step"]],
+      # "A_0" = T_range[result_pools[, "step"]]
 
     )
 
