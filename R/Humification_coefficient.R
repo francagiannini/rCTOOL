@@ -3,7 +3,6 @@
 #' @param f_clay fraction of clay in soil
 #'
 #' @return
-#' @export
 #'
 #' @examples
 .hum_coef = function(f_clay) {

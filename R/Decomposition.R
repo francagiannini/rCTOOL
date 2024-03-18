@@ -1,14 +1,33 @@
 
+#' .temp_coef
+#'
+#' @param T_zt 
+#'
+#' @return
+#'
+#' @examples
 .temp_coef =  function(T_zt) {
   
     return(7.24 * exp(-3.432 + 0.168 * T_zt * (1 - 0.5 * T_zt / 36.9)))
 }
 
+#' .soil_temp
+#'
+#' @param depth 
+#' @param month 
+#' @param T_ave 
+#' @param A_0 
+#' @param th_diff 
+#'
+#' @return
+#'
+#' @examples
 .soil_temp = function(depth,
                       month,
                       T_ave ,
                       A_0 ,
                       th_diff) {
+  
 
     # depth in meters#
     z = depth / 2 * 0.01
@@ -40,7 +59,6 @@
 #' @param k description
 #' @param tempCoefficient description
 #' @return T
-#' @export
 #' @examples
 
 .decay = function(CO_t, k, tempCoefficient ){
@@ -70,7 +88,8 @@ soil_pool_decomposition = function(soil_pool = c('FOM_top','FOM_sub','HUM_top','
                                     s_config) {
   
   temp_coefficient = .temp_coef(T_zt=.soil_temp(depth=soil_depth, month = month, T_ave = t_avg, A_0 = t_range, th_diff = s_config[['phi']]))
-  
-  return(.decay(CO_t = soil_pool, k = k, tempCoefficient = temp_coefficient))
+  decay = .decay(CO_t = soil_pool, k = k, tempCoefficient = temp_coefficient)
+  return( .decay_physical_boundary(decay))
   rm(list='temp_coefficient')
 }
+

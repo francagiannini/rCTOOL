@@ -17,10 +17,11 @@ ROM_top_calculations = function(ROM_top_t,
                                 s_config) {
   
   ROM_decomposition = soil_pool_decomposition(soil_pool=ROM_top_t, k=s_config[['k_rom']], soil_depth=25, month=month, t_avg=t_avg, t_range=t_range, s_config)
-  substrate_ROM_decomp_top =  ROM_top_t - (ROM_top_t + ROM_decomposition)
+  substrate_ROM_decomp_top = ROM_top_t - (ROM_top_t + ROM_decomposition) 
   em_CO2_ROM_top = substrate_ROM_decomp_top * s_config[['f_co2']]
-  ROM_transport = substrate_ROM_decomp_top * s_config[['ftr']] 
-  ROM_top = ROM_top_t - em_CO2_ROM_top - ROM_transport 
+  ROM_transport = substrate_ROM_decomp_top  * s_config[['ftr']]
+  ROM_top = ROM_top_t - em_CO2_ROM_top - ROM_transport
+  ROM_top = .soil_pool_physical_restriction(ROM_top)
   
   return(list(
     ROM_top = ROM_top,
@@ -43,16 +44,17 @@ ROM_top_calculations = function(ROM_top_t,
 #' @export
 #'
 #' @examples
-ROM_sub_calculations = function(ROM_sub_t, # here what I do not get is how we add to the previous ROM_sub what it comes from the transport of ROM_top
+ROM_sub_calculations = function(ROM_sub_t,
                                 month,
                                 t_avg = t_avg,
                                 t_range = t_range,
                                 s_config) {
   
   ROM_decomposition = soil_pool_decomposition(soil_pool=ROM_sub_t, k=s_config[['k_rom']], soil_depth=100, month=month, t_avg=t_avg, t_range=t_range, s_config = s_config)
-  substrate_ROM_decomp_sub = ROM_sub_t - (ROM_sub_t + ROM_decomposition) # ROM_sub_t - ROM_decomposition
-  em_CO2_ROM_sub = substrate_ROM_decomp_sub * s_config[['f_co2']] 
+  substrate_ROM_decomp_sub = ROM_sub_t - (ROM_sub_t + ROM_decomposition) 
+  em_CO2_ROM_sub = substrate_ROM_decomp_sub * s_config[['f_co2']]
   ROM_sub = ROM_sub_t - em_CO2_ROM_sub
+  ROM_sub = .soil_pool_physical_restriction(ROM_sub)
   
   return(list(
     ROM_sub = ROM_sub,
