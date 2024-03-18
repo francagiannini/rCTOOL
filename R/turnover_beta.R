@@ -261,7 +261,7 @@ turnover <- function(i) {
       "CO2_ROM_sub" = CO2_ROM_sub,
 
       "C_CO2_top" = CO2_FOM_top + CO2_HUM_top + CO2_ROM_top,
-      "C_CO2_sub" = CO2_FOM_sub + CO2_HUM_sub + CO2_ROM_sub,
+      "C_CO2_sub" = CO2_FOM_sub + CO2_HUM_sub + CO2_ROM_sub#,
 
       # "Cinp_top" = C_input_top[y] * month_prop[m],
       # "Cinp_sub" = C_input_sub[y] * month_prop[m],
