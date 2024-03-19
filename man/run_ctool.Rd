@@ -7,16 +7,6 @@
 run_ctool(time_config, cin_config, m_config, t_config, s_config, soil_pools)
 }
 \arguments{
-\item{time_config}{}
-
-\item{cin_config}{}
-
-\item{m_config}{}
-
-\item{t_config}{}
-
-\item{s_config}{}
-
 \item{soil_pools}{}
 }
 \description{
