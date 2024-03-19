@@ -20,9 +20,8 @@ HUM_top_calculations = function(HUM_top_t,
   substrate_HUM_decomp_top = HUM_top_t - (HUM_top_t + HUM_decomposition) 
   HUM_romified_top  = substrate_HUM_decomp_top * s_config[['f_romi']]
   em_CO2_HUM_top = substrate_HUM_decomp_top * s_config[['f_co2']]
-  HUM_transport = substrate_HUM_decomp_top*  (1-s_config[['f_co2']]*s_config[['f_romi']]) # one error was here
+  HUM_transport = (HUM_top_t+HUM_decomposition)  *(1-s_config[['f_romi']]-s_config[['f_co2']])
   HUM_top = HUM_top_t - HUM_romified_top - em_CO2_HUM_top - HUM_transport
-  HUM_top = .soil_pool_physical_restriction(HUM_top)
   
   return(list(
     HUM_top = HUM_top,
@@ -58,7 +57,6 @@ HUM_sub_calculations = function(HUM_sub_t,
   HUM_romified_sub  = substrate_HUM_decomp_sub * s_config[['f_romi']]
   em_CO2_HUM_sub = substrate_HUM_decomp_sub * s_config[['f_co2']]
   HUM_sub = HUM_sub_t - HUM_romified_sub - em_CO2_HUM_sub
-  HUM_sub = .soil_pool_physical_restriction(HUM_sub)
   
   return(list(
     HUM_sub = HUM_sub,

@@ -1,6 +1,3 @@
-#' TODO: add function to scrape temp data by coordinate
-
-
 #' prepare_temperature
 #'
 #' @param filepath 
@@ -24,8 +21,11 @@ prepare_temperature = function(filepath,
     Trange_col = 'Trange'
     file[,Trange_col] = default_Trange 
   }
+  else {
+    file$Trange_col = Trange_col 
+  }
   return(list(
     Tavg = file[,Tavg_col],
-    Trange_col=file[,Trange_col]
+    Trange_col=file[,'Trange_col']
   ))
 }
