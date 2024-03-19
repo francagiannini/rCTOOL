@@ -13,14 +13,6 @@ HUM_sub_calculations(
 )
 }
 \arguments{
-\item{HUM_sub_t}{}
-
-\item{month}{}
-
-\item{t_avg}{}
-
-\item{t_range}{}
-
 \item{s_config}{}
 }
 \description{
