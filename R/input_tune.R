@@ -36,8 +36,11 @@ pool_cn <- function(cn,
                     C_0) {
   CNfraction = min(56.2 * cn ^ (-1.69), 1)
 
-  FOM = 1-HUM_frac-ROM_frac
+
   HUM = C_0 * HUM_frac * CNfraction
+
+  FOM = C_0 *(1-HUM_frac-ROM_frac)
+
   ROM = C_0 -HUM- FOM
 
   c("FOM"=FOM,"HUM"=HUM,"ROM"=ROM)
