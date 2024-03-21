@@ -2,7 +2,7 @@
 #'
 #' @param yr_start initial simulation year
 #' @param yr_end end simulation year
-#' @description creates a 
+#' @description creates a
 #' @return
 #' @export
 #'
@@ -12,7 +12,7 @@ define_timeperiod = function(yr_start=2006,
   timeperiod = expand.grid( mon=1:12,
                             yrs=yr_start:yr_end)
   timeperiod$id = timeperiod$yrs-(yr_start-1)
-  
+
   return(list(
     timeperiod = timeperiod,
     steps = nrow(timeperiod)))
@@ -26,14 +26,14 @@ define_timeperiod = function(yr_start=2006,
 #' @param n number of simulated years
 #' @description
 #' helper function to read a dataframe and return Cin_top, Cin_sub, Cin_man
-#' 
+#'
 #' @return
 #' @export
 #'
 #' @examples
 .read_Cinputs = function(df_Cin,
                          n) {
-  
+
   if (nrow(df_Cin) != n) {
     stop('Number of annual C inputs must be equal to the number of simulated years.')
   }
@@ -53,7 +53,7 @@ define_timeperiod = function(yr_start=2006,
 #' @param time_config config of timeperiod
 #' @description
 #' explicits C inputs from plants and manure
-#' 
+#'
 #' @return
 #' @export
 #'
@@ -66,8 +66,8 @@ define_Cinputs = function(df_Cin = NULL,
 
   n = length(unique(time_config$timeperiod$yrs))
   if (length(Cin_top) != n | length(Cin_sub) != n | length(Cin_man) != n) { stop('Number of C inputs must be equal to the number of simulated years') }
-  
-  if (missing(df_Cin)==T) { 
+
+  if (missing(df_Cin)==T) {
     return(list(
       Cin_top = Cin_top,
       Cin_sub = Cin_sub,
@@ -85,7 +85,7 @@ define_Cinputs = function(df_Cin = NULL,
 #' management_config
 #'
 #' @param f_man_humification fraction of manure already humidified
-#' @param plant_monthly_allocation monthly distribution of plant C inputs 
+#' @param plant_monthly_allocation monthly distribution of plant C inputs
 #' @param manure_monthly_allocation monthly distribution of manure C input
 #'
 #' @return
@@ -95,7 +95,7 @@ define_Cinputs = function(df_Cin = NULL,
 management_config = function(f_man_humification=0.192,
                              plant_monthly_allocation = c(0,0,0,.08,.12,.16,.64,0,0,0,0,0),
                              manure_monthly_allocation = c(0,0,1,0,0,0,0,0,0,0,0,0)) {
-  
+
   if (length(plant_monthly_allocation)!=12 | length(manure_monthly_allocation)!=12) {
     stop('Vector must be of length 12 (1 for each month).')
   }
@@ -118,7 +118,7 @@ management_config = function(f_man_humification=0.192,
 #' @param Cproptop Proportion of the total C allocated in topsoil
 #' @param clay_top clay fraction top soil
 #' @param clay_sub clay fraction subsoil
-#' @param phi Diffusion index 
+#' @param phi Diffusion index
 #' @param f_co2 respiration fraction
 #' @param f_romi romification fraction
 #' @param k_fom fom decomposition rate
@@ -126,10 +126,10 @@ management_config = function(f_man_humification=0.192,
 #' @param k_rom rom decomposition rate
 #' @param ftr transport rate
 #' @param cn soil Carbon:Nitrogen ratio
-#' @param ini_Cin_top initial C inputs topsoil 
-#' @param ini_Cin_sub initial C inputs subsoil 
+#' @param ini_Cin_top initial C inputs topsoil
+#' @param ini_Cin_sub initial C inputs subsoil
 #' @description soil configuration params
-#' @return 
+#' @return
 #' @export
 #'
 #' @examples
@@ -145,12 +145,12 @@ soil_config = function(Csoil_init = 70.4,
                        f_co2 = 0.628,
                        f_romi = 0.012,
                        k_fom  = 0.12,
-                       k_hum = 0.0028, 
+                       k_hum = 0.0028,
                        k_rom = 3.85e-5,
                        ftr = 0.003,
                        cn = 7.166667) {
 
-  
+
   return(list(
     Csoil_init = Csoil_init,
     f_hum_top = f_hum_top,
@@ -188,7 +188,7 @@ soil_config = function(Csoil_init = 70.4,
 #' @param cn soil CN
 #' @param f_hum_top initial hum fraction top layer
 #' @param f_rom_top initial rom fraction top layer
-#' @param ini_Cin_top initial C inputs topsoil 
+#' @param ini_Cin_top initial C inputs topsoil
 #' @export
 #' @examples pool_cn(cn=12,HUM_frac = 0.33, C_0=75)
 .pool_cn = function(cn,
@@ -196,23 +196,24 @@ soil_config = function(Csoil_init = 70.4,
                     f_rom_top,
                     ini_Cin_top,
                     soil_surf=c('top','sub')) {
-  
+
   CNfraction = min(56.2 * cn ^ (-1.69), 1)
-  
-  fom = 1-f_hum_top-f_rom_top
+
+
   hum = ini_Cin_top * f_hum_top * CNfraction
-  rom = ini_Cin_top -hum-fom
-  
-  if (soil_surf=='top') { 
+  fom = ini_Cin_top *(1-f_hum_top-f_rom_top) # Modified after Ozan observation
+  rom = ini_Cin_top-hum-fom
+
+  if (soil_surf=='top') {
     return(list(FOM_top=fom,
                 HUM_top=hum,
-                ROM_top=rom)) 
+                ROM_top=rom))
   }
-  else { 
+  else {
     return(list(FOM_sub=fom,
                 HUM_sub=hum,
-                ROM_sub=rom)) 
-  } 
+                ROM_sub=rom))
+  }
 }
 
 
@@ -225,7 +226,7 @@ soil_config = function(Csoil_init = 70.4,
 #'
 #' @examples
 initialize_soil_pools = function(soil_config) {
-  
+
   ini_pool_top = .pool_cn(cn=soil_config$cn,
                          f_hum_top = soil_config$f_hum_top,
                          f_rom_top = soil_config$f_rom_top,
@@ -236,7 +237,7 @@ initialize_soil_pools = function(soil_config) {
                          f_rom_top = soil_config$f_rom_sub,
                          ini_Cin_top = soil_config$ini_Cin_sub,
                          'sub')
-  
+
   return(list(
     ini_pool_top,
     ini_pool_sub
