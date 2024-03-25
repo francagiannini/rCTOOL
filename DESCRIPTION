@@ -1,12 +1,13 @@
 Package: rCTOOL
 Type: Package
-Title: What the Package Does (Title Case)
+Title: An open and comprehensive R package for C turnover modelling
 Version: 0.1.0
-Author: Who wrote it
+Author: Franca Giannini-Kurina, João Serra
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Description: rCTOOL is an open-source R package, that encapsulates the capabilities of C-TOOL while addressing its implementation limitations. 
+The aim consists of providing a user-friendly interface, facilitates running multiple scenarios, and offers comprehensive documentation and licensing information. 
+This package streamlines the use of C-TOOL, making it more accessible and effective for potential users.
+License: MIT
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
