@@ -250,7 +250,7 @@ turnover_beta <- function(i) {
       "HUM_tr" = HUM_tr,
       "ROM_tr" = ROM_tr,
 
-      "C_tr" =  HUM_tr + ROM_tr,
+      #"C_tr" =  HUM_tr + ROM_tr,
 
       "CO2_FOM_top" = CO2_FOM_top,
       "CO2_HUM_top" = CO2_HUM_top,
