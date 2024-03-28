@@ -230,7 +230,7 @@ initialize_soil_pools = function(soil_config) {
   ini_pool_top = .pool_cn(cn=soil_config$cn,
                          f_hum = soil_config$f_hum_top,
                          f_rom = soil_config$f_rom_top,
-                         ini_Cinp = soil_config$ini_Cin_top,
+                         ini_Cin = soil_config$ini_Cin_top,
                          'top')
   ini_pool_sub = .pool_cn(cn=soil_config$cn,
                          f_hum = soil_config$f_hum_sub,

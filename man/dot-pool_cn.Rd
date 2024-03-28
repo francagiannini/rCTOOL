@@ -9,11 +9,11 @@
 \arguments{
 \item{cn}{soil CN}
 
-\item{f_hum_top}{initial hum fraction top layer}
+\item{f_hum}{initial hum fraction}
 
-\item{f_rom_top}{initial rom fraction top layer}
+\item{f_rom}{initial rom fraction}
 
-\item{ini_Cin_top}{initial C inputs topsoil}
+\item{ini_Cin}{initial C inputs}
 }
 \description{
 This function helps to modify the parametrization of the initial pool distribution
