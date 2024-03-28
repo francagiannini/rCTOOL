@@ -191,6 +191,7 @@ soil_config = function(Csoil_init = 70.4,
 #' @param ini_Cin_top initial C inputs topsoil
 #' @export
 #' @examples pool_cn(cn=12,HUM_frac = 0.33, C_0=75)
+
 .pool_cn = function(cn,
                     f_hum,
                     f_rom,
