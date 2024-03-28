@@ -147,7 +147,7 @@ soil_config = function(Csoil_init = 70.4,
                        k_fom  = 0.12,
                        k_hum = 0.0028,
                        k_rom = 3.85e-5,
-                       ftr = 0.003,
+                       ftr = 0.0025,
                        cn = 7.166667) {
 
 
@@ -192,17 +192,17 @@ soil_config = function(Csoil_init = 70.4,
 #' @export
 #' @examples pool_cn(cn=12,HUM_frac = 0.33, C_0=75)
 .pool_cn = function(cn,
-                    f_hum_top,
-                    f_rom_top,
-                    ini_Cin_top,
+                    f_hum,
+                    f_rom,
+                    ini_Cin,
                     soil_surf=c('top','sub')) {
 
   CNfraction = min(56.2 * cn ^ (-1.69), 1)
 
 
-  hum = ini_Cin_top * f_hum_top * CNfraction
-  fom = ini_Cin_top *(1-f_hum_top-f_rom_top) # Modified after Ozan observation
-  rom = ini_Cin_top-hum-fom
+  hum = (ini_Cin * f_hum) * CNfraction
+  fom = ini_Cin *(1-f_hum-f_rom) # Modified after Ozan observation
+  rom = ini_Cin-hum-fom
 
   if (soil_surf=='top') {
     return(list(FOM_top=fom,
@@ -228,14 +228,14 @@ soil_config = function(Csoil_init = 70.4,
 initialize_soil_pools = function(soil_config) {
 
   ini_pool_top = .pool_cn(cn=soil_config$cn,
-                         f_hum_top = soil_config$f_hum_top,
-                         f_rom_top = soil_config$f_rom_top,
-                         ini_Cin_top = soil_config$ini_Cin_top,
+                         f_hum = soil_config$f_hum_top,
+                         f_rom = soil_config$f_rom_top,
+                         ini_Cinp = soil_config$ini_Cin_top,
                          'top')
   ini_pool_sub = .pool_cn(cn=soil_config$cn,
-                         f_hum_top = soil_config$f_hum_sub,
-                         f_rom_top = soil_config$f_rom_sub,
-                         ini_Cin_top = soil_config$ini_Cin_sub,
+                         f_hum = soil_config$f_hum_sub,
+                         f_rom = soil_config$f_rom_sub,
+                         ini_Cin = soil_config$ini_Cin_sub,
                          'sub')
 
   return(list(
