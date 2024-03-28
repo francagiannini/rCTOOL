@@ -4,7 +4,7 @@
 \alias{.pool_cn}
 \title{Initial pool distribution parametrization}
 \usage{
-.pool_cn(cn, f_hum_top, f_rom_top, ini_Cin_top, soil_surf = c("top", "sub"))
+.pool_cn(cn, f_hum, f_rom, ini_Cin, soil_surf = c("top", "sub"))
 }
 \arguments{
 \item{cn}{soil CN}

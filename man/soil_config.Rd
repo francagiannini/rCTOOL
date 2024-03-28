@@ -19,7 +19,7 @@ soil_config(
   k_fom = 0.12,
   k_hum = 0.0028,
   k_rom = 3.85e-05,
-  ftr = 0.003,
+  ftr = 0.0025,
   cn = 7.166667
 )
 }
