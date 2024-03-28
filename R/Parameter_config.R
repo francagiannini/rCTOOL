@@ -186,12 +186,11 @@ soil_config = function(Csoil_init = 70.4,
 #'will exhibit clear declines in SOC, in contrast to the general build-up of SOC on these soils reported
 #'by Heidmann et al. (2001).
 #' @param cn soil CN
-#' @param f_hum_top initial hum fraction top layer
-#' @param f_rom_top initial rom fraction top layer
-#' @param ini_Cin_top initial C inputs topsoil
+#' @param f_hum initial hum fraction
+#' @param f_rom initial rom fraction
+#' @param ini_Cin initial C inputs
 #' @export
 #' @examples pool_cn(cn=12,HUM_frac = 0.33, C_0=75)
-
 .pool_cn = function(cn,
                     f_hum,
                     f_rom,
