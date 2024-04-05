@@ -1,7 +1,6 @@
 #' Turnover core function
 
 #' @return The arguments are:
-#' @export
 #' @examples
 #'
 
