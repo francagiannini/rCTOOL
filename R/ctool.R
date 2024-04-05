@@ -26,17 +26,17 @@ turnover = function(timestep,
 
   # FOM ----
   FOM_top = update_monthly_FOM_top(FOM_top_t1 = out$FOM_top, Cin_plant_top = cin_config$Cin_top[yr] , Cin_manure = cin_config$Cin_man[yr], month = mon, m_config = m_config)
-  FOM_top = FOM_top_calculations(FOM_top_t=FOM_top, month=mon, t_avg = t_config$Tavg[timestep], t_range=t_config$Trange_col[timestep], s_config)
+  FOM_top = FOM_top_calculations(FOM_top_t=FOM_top, month=mon, t_avg = t_config$Tavg[timestep], t_range=t_config$Range[timestep], s_config)
 
   FOM_sub = update_monthly_FOM_sub(FOM_sub_t1 = out$FOM_sub, FOM_transport = FOM_top$FOM_tr, C_in_plant_sub = cin_config$Cin_sub[yr], month = mon, m_config = m_config)
-  FOM_sub = FOM_sub_calculations(FOM_sub_t=FOM_sub, month=mon, t_avg = t_config$Tavg[timestep], t_range=t_config$Trange_col[mon], s_config = s_config)
+  FOM_sub = FOM_sub_calculations(FOM_sub_t=FOM_sub, month=mon, t_avg = t_config$Tavg[timestep], t_range=t_config$Range[mon], s_config = s_config)
 
   # HUM ----
   HUM_top = update_monthly_HUM_top(HUM_top_t1 = out$HUM_top, C_in_man = cin_config$Cin_man[yr], FOM_humified_top = FOM_top$FOM_humified_top, month = mon, m_config = m_config)
-  HUM_top = HUM_top_calculations(HUM_top_t = HUM_top, month = mon, t_avg = t_config$Tavg[timestep], t_range=t_config$Trange_col[mon], s_config = s_config)
+  HUM_top = HUM_top_calculations(HUM_top_t = HUM_top, month = mon, t_avg = t_config$Tavg[timestep], t_range=t_config$Range[mon], s_config = s_config)
 
   HUM_sub = update_monthly_HUM_sub(HUM_sub_t1 =out$HUM_sub, HUM_transport = HUM_top$HUM_tr, FOM_humified_sub = FOM_sub$FOM_humified_sub)
-  HUM_sub = HUM_sub_calculations(HUM_sub_t = HUM_sub, month = mon, t_avg = t_config$Tavg[timestep], t_range=t_config$Trange_col[mon], s_config = s_config)
+  HUM_sub = HUM_sub_calculations(HUM_sub_t = HUM_sub, month = mon, t_avg = t_config$Tavg[timestep], t_range=t_config$Range[mon], s_config = s_config)
 
   # ROM ----
   ROM_top = update_monthly_ROM_top(ROM_top_t1 = out$ROM_top, HUM_romified_top = HUM_top$HUM_romified_top)
