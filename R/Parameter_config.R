@@ -88,7 +88,7 @@ define_Cinputs = function(management_filepath = NULL,
     return(list(
       Cin_top = df$Cin_top,
       Cin_sub = df$Cin_sub,
-      Cin_man = dfCin_man
+      Cin_man = df$Cin_man
     ))
   }
   else {
@@ -139,9 +139,7 @@ management_config = function(management_filepath = NULL,
     else {
       df = read.csv(management_filepath) # note: there is an unneeded overhead here (read.csv twice from management and Cin!)
     }
-
-    # apply some conditions, these are not implement ad nauseam, needs common sense
-    if (length(which(names(df) %in% 'manure_monthly_allocation'))!=3) { stop('Even if no manure is used, make sure this column exists all all is set to 0') }
+    # apply some conditions here if needed, these are not implement ad nauseam, needs common sense
 
     return(list(
       f_man_humification = df$f_man_humification,
