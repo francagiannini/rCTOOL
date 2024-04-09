@@ -3,7 +3,6 @@
 
 
 #' @return The arguments are:
-#' @export
 #' @examples
 
 soil_temp <-
@@ -42,7 +41,6 @@ soil_temp <-
 
 
 #' @return The arguments are:
-#' @export
 #' @examples
 
 
