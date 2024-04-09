@@ -13,4 +13,5 @@ Depends:
     data.table,
     dplyr,
     easyclimate,
-    ggplot2
+    ggplot2,
+    R (>= 2.10)

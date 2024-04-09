@@ -53,6 +53,7 @@ export_management_template = function(yr_start,
 
 #' define_Cinputs
 #'
+#' @param management_filepath filepath (or file!) for the management template (see export_management_template())
 #' @param df_Cin dataframe with the following cols: Cin_top (residues topsoil), Cin_sub (residues subsoil), Cin_man (Manure)
 #' @param Cin_top C input from residues on topsoil
 #' @param Cin_sub C input from residues on subsoil
@@ -75,7 +76,13 @@ define_Cinputs = function(management_filepath = NULL,
 
   if (missing(management_filepath)==F) {
 
-    df = read.csv(management_filepath)
+    if (class(management_filepath)=='data.frame') {
+      df = management_filepath
+    }
+    else {
+      df = read.csv(management_filepath)
+    }
+
     if (length(which(names(df) %in% c('Cin_top','Cin_sub','Cin_man')))!=3) { stop('Ensure Cin_top, Cin_sub and Cin_man are populated!') }
     return(list(
       Cin_top = df$Cin_top,
@@ -98,7 +105,7 @@ define_Cinputs = function(management_filepath = NULL,
 
 #' management_config
 #'
-#' @param management_filepath filepath for the management template (see export_management_template())
+#' @param management_filepath filepath (or file!) for the management template (see export_management_template())
 #' @param plant_monthly_allocation monthly distribution of plant C inputs; default c(0,0,0,.08,.12,.16,.64,0,0,0,0,0)
 #' @param grain_monthly_allocation monthly distribution of grain C input; default c(0,0,1,0,0,0,0,0,0,0,0,0)
 #' @param grass_monthly_allocation monthly distribution of grass C input; default c(0,0,1,0,0,0,0,0,0,0,0,0)
@@ -125,7 +132,12 @@ management_config = function(management_filepath = NULL,
 
   if (missing(management_filepath)==F) {
 
-    df = read.csv(management_filepath) # note: there is an unneeded overhead here (read.csv twice from management and Cin!)
+    if (class(management_filepath)=='data.frame') {
+      df = management_filepath
+    }
+    else {
+      df = read.csv(management_filepath) # note: there is an unneeded overhead here (read.csv twice from management and Cin!)
+    }
 
     # apply some conditions, these are not implement ad nauseam, needs common sense
     if (length(which(names(df) %in% c('plant_monthly_allocation','grain_monthly_allocation','grass_monthly_allocation')))!=3) { stop('Please either use plant allocation or grain/grass rotation!') }
