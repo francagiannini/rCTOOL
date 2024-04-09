@@ -141,7 +141,6 @@ management_config = function(management_filepath = NULL,
     }
 
     # apply some conditions, these are not implement ad nauseam, needs common sense
-    if (length(which(names(df) %in% c('plant_monthly_allocation','grain_monthly_allocation','grass_monthly_allocation')))!=3) { stop('Please either use plant allocation or grain/grass rotation!') }
     if (length(which(names(df) %in% 'manure_monthly_allocation'))!=3) { stop('Even if no manure is used, make sure this column exists all all is set to 0') }
 
     return(list(
