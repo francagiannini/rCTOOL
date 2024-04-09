@@ -215,7 +215,6 @@ soil_config = function(Csoil_init = 70.4,
                        k_rom = 3.85e-5,
                        ftr = 0.0025) {
 
-
   return(list(
     Csoil_init = Csoil_init,
     f_hum_top = f_hum_top,
