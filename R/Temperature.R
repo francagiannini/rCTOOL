@@ -104,10 +104,10 @@ set_monthly_temperature_data = function(file=NULL,
     #  identify user specified arguments
     args = match.call(expand.dots = FALSE)$...
 
-    if (length(which(c('coords','yr_start','yr_end')) %in% args)==3) {
+    if (length(names(args) %in% c('coords','yr_start','yr_end'))==3) {
       return(populate_temperature(coords, yr_start, yr_end))
     }
-    else if (length(which(c('Tavg','Range')) %in% args)==2) {
+    else if (length(names(args) %in% c('Tavg','Range'))==2) {
       return(data.frame(Tavg=Tavg, Range=Range))
     }
   }
