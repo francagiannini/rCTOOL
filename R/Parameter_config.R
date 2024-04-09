@@ -125,7 +125,6 @@ management_config = function(f_man_humification=0.192,
 #' @param k_hum hum decomposition rate
 #' @param k_rom rom decomposition rate
 #' @param ftr transport rate
-#' @param cn soil Carbon:Nitrogen ratio
 #' @param ini_Cin_top initial C inputs topsoil
 #' @param ini_Cin_sub initial C inputs subsoil
 #' @description soil configuration params
@@ -147,8 +146,7 @@ soil_config = function(Csoil_init = 70.4,
                        k_fom  = 0.12,
                        k_hum = 0.0028,
                        k_rom = 3.85e-5,
-                       ftr = 0.0025,
-                       cn = 7.166667) {
+                       ftr = 0.0025) {
 
 
   return(list(
@@ -167,7 +165,6 @@ soil_config = function(Csoil_init = 70.4,
     k_hum = k_hum,
     k_rom = k_rom,
     ftr = ftr,
-    cn = cn,
     ini_Cin_top = Csoil_init * Cproptop,
     ini_Cin_sub = Csoil_init * (1 - Cproptop)
   ))
@@ -219,20 +216,22 @@ soil_config = function(Csoil_init = 70.4,
 
 #' initialize_soil_pools
 #'
+#' @param cn soil carbon:nitrogen ratio
 #' @param soil_config soil configuration file (list)
 #' @description initializes top and bottom soil pools
 #' @return list with the initialized top and bottom soil pool
 #' @export
 #'
 #' @examples
-initialize_soil_pools = function(soil_config) {
+initialize_soil_pools = function(cn,
+                                 soil_config) {
 
-  ini_pool_top = .pool_cn(cn=soil_config$cn,
+  ini_pool_top = .pool_cn(cn=cn,
                          f_hum = soil_config$f_hum_top,
                          f_rom = soil_config$f_rom_top,
                          ini_Cin = soil_config$ini_Cin_top,
                          'top')
-  ini_pool_sub = .pool_cn(cn=soil_config$cn,
+  ini_pool_sub = .pool_cn(cn=cn,
                          f_hum = soil_config$f_hum_sub,
                          f_rom = soil_config$f_rom_sub,
                          ini_Cin = soil_config$ini_Cin_sub,
