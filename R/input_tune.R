@@ -10,7 +10,6 @@
 #'by Heidmann et al. (2001).
 #'
 #' @return The arguments are: cn;HUM_frac;C_0
-#' @export
 #' @examples
 #' pool_cn(cn=12,HUM_frac = 0.33, C_0=75)
 #' pool_cn(cn=8,HUM_frac = 0.33, C_0=75)
@@ -54,7 +53,6 @@ pool_cn
 #'amounts. Calculations of total C (Mg/ha) deposited in top and sub soil
 #'
 #' @return The arguments are:
-#' @export
 #' @examples
 
 allo <- function(yield_MC,
