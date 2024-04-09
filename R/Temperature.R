@@ -15,8 +15,8 @@ convert_day_to_monthly_temperatures = function(file) {
 
   # identify class of arg file; if it is character assume it is a filepath to be read, otherwise if it is a dataframe, move on
   if (class(file)=='character') {
-    if (grepl('csv',filepath)==F) {stop('Please use a csv file.') }
-    file = read.csv(filepath)
+    if (grepl('csv',file)==F) {stop('Please use a csv file.') }
+    file = read.csv(file)
   }
   else {
     if (class(file) != 'data.frame') { stop('Argument "file" can be either a filepath to the temperature csv or it can directly be the temperature data.frame')}
