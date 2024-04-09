@@ -105,6 +105,6 @@ run_ctool = function(time_config,
   #  return(out)
   #})
   ctool = data.table::rbindlist(st)
-  if (verbose==T) { ctool = check_balance(ctool) }
+  if (verbose==T) { ctool = check_balance(ctool_output = ctool, cin_config = cin_config, s_config = s_config) }
   return(cbind(time_config$timeperiod[,c('mon','yrs')], ctool))
 }
