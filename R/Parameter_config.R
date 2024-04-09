@@ -246,7 +246,6 @@ soil_config = function(Csoil_init = 70.4,
 #' @description
 #' A short description...
 #'
-#' @export
 #' @examples pool_cn(cn=12,HUM_frac = 0.33, C_0=75)
 .pool_cn = function(cn,
                     f_hum,
