@@ -152,7 +152,10 @@ management_config = function(management_filepath = NULL,
   else {
     # if no management template is given, prepare vectorization
     # note this is set to fixed monthly values
-    if (length(plant_monthly_allocation)!=12 | length(manure_monthly_allocation)!=12 | length(grain_monthly_allocation)!=12 | length(grass_monthly_allocation)!=12) {
+    if ( (missing(plant_monthly_allocation)==F & length(plant_monthly_allocation)!=12) |
+         (missing(manure_monthly_allocation)==F & length(manure_monthly_allocation)!=12) |
+         (missing(grain_monthly_allocation)==F & length(grain_monthly_allocation)!=12) |
+         (missing(grass_monthly_allocation)==F & length(grass_monthly_allocation)!=12) ){
       stop('Vector must be of length 12 (1 for each month).')
     }
     else {
