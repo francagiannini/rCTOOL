@@ -2,13 +2,16 @@
 #'
 #' @param yr_start initial simulation year
 #' @param yr_end end simulation year
-#' @description creates a
-#' @return
+#'
+#' @description
+#' creates a dataframe template with the months, yrs and annual timesteps
+#'
+#' @returns list with 2 indexes; index 1 is a dataframe teplate (cols month, yr and annual timestep) and index 2 is the number of months
 #' @export
 #'
-#' @examples
-define_timeperiod = function(yr_start=2006,
-                             yr_end=2010) {
+#' @examples define_timeperiod(yr_start=2006, yr_end=2010)
+define_timeperiod = function(yr_start,
+                             yr_end) {
   timeperiod = expand.grid( mon=1:12,
                             yrs=yr_start:yr_end)
   timeperiod$id = timeperiod$yrs-(yr_start-1)
@@ -20,28 +23,32 @@ define_timeperiod = function(yr_start=2006,
 
 
 
-#' .read_Cinputs
+#' export_management_template
 #'
-#' @param df_Cin dataframe with the following cols: Cin_top (residues topsoil), Cin_sub (residues subsoil), Cin_man (Manure)
-#' @param n number of simulated years
+#' @param yr_start initial simulation year
+#' @param yr_end end simulation year
+#' @param filepath filepath where management template is to be exported
+#'
 #' @description
-#' helper function to read a dataframe and return Cin_top, Cin_sub, Cin_man
+#' if user wants to specify monthly (or annual) C inputs and allocation fraction, it can export a template later to be read by the model
+#' note that all relevant columns are exported as 0, to be later populated by the user
+#' user needs to deleted columns that are not being used
+#' please ensure no double accounting in columns, for instance, by populating "plant_monthly_allocation" the user should not distinguish grass nor grain crops
+#' Furthermore, if user provides monthly C inputs, there is no need to populate allocation columns
+#' these conditions are not provided in the code and must be manually done with commmon sense
 #'
 #' @return
 #' @export
 #'
-#' @examples
-.read_Cinputs = function(df_Cin,
-                         n) {
+#' @examples export_management_template(2006, 2010, './Management_config.csv')
+export_management_template = function(yr_start,
+                                      yr_end,
+                                      filepath) {
 
-  if (nrow(df_Cin) != n) {
-    stop('Number of annual C inputs must be equal to the number of simulated years.')
-  }
-  return(list(
-    Cin_top = df_Cin$Cin_top,
-    Cin_sub = df_Cin$Cin_sub,
-    Cin_man = df_Cin$Cin_man
-  ))
+  df = define_timeperiod(yr_start, yr_end)$timeperiod
+  cols_add = c('plant_monthly_allocation','grain_monthly_allocation','grass_monthly_allocation','manure_monthly_allocation','Cin_top','Cin_sub','Cin_man')
+  df[, cols_add] = 0
+  write.csv(df, filepath, row.names = F)
 }
 
 #' define_Cinputs
@@ -51,6 +58,7 @@ define_timeperiod = function(yr_start=2006,
 #' @param Cin_sub C input from residues on subsoil
 #' @param Cin_man C input from manure
 #' @param time_config config of timeperiod
+#'
 #' @description
 #' explicits C inputs from plants and manure
 #'
@@ -58,53 +66,95 @@ define_timeperiod = function(yr_start=2006,
 #' @export
 #'
 #' @examples
-define_Cinputs = function(df_Cin = NULL,
+define_Cinputs = function(management_filepath = NULL,
                           Cin_top=NULL,
                           Cin_sub=NULL,
                           Cin_man=NULL,
-                          time_config) {
+                          time_config=NULL) {
 
-  n = length(unique(time_config$timeperiod$yrs))
-  if (length(Cin_top) != n | length(Cin_sub) != n | length(Cin_man) != n) { stop('Number of C inputs must be equal to the number of simulated years') }
 
-  if (missing(df_Cin)==T) {
+  if (missing(management_filepath)==F) {
+
+    df = read.csv(management_filepath)
+    if (length(which(names(df) %in% c('Cin_top','Cin_sub','Cin_man')))!=3) { stop('Ensure Cin_top, Cin_sub and Cin_man are populated!') }
+    return(list(
+      Cin_top = df$Cin_top,
+      Cin_sub = df$Cin_sub,
+      Cin_man = dfCin_man
+    ))
+  }
+  else {
+
+    n = length(unique(time_config$timeperiod$yrs))
+    if (length(Cin_top) != n | length(Cin_sub) != n | length(Cin_man) != n) { stop('Number of C inputs must be equal to the number of simulated years') }
     return(list(
       Cin_top = Cin_top,
       Cin_sub = Cin_sub,
       Cin_man = Cin_man
     ))
   }
-  else {
-    return(.read_Cinputs(df_Cin, n))
-  }
 }
 
 
-#// maybe add new function to mroe easily change monthky allocation
-
 #' management_config
 #'
-#' @param f_man_humification fraction of manure already humidified
-#' @param plant_monthly_allocation monthly distribution of plant C inputs
-#' @param manure_monthly_allocation monthly distribution of manure C input
+#' @param management_filepath filepath for the management template (see export_management_template())
+#' @param plant_monthly_allocation monthly distribution of plant C inputs; default c(0,0,0,.08,.12,.16,.64,0,0,0,0,0)
+#' @param grain_monthly_allocation monthly distribution of grain C input; default c(0,0,1,0,0,0,0,0,0,0,0,0)
+#' @param grass_monthly_allocation monthly distribution of grass C input; default c(0,0,1,0,0,0,0,0,0,0,0,0)
+#' @param manure_monthly_allocation monthly distribution of manure C input; default c(0,0,1,0,0,0,0,0,0,0,0,0)
+#' @param f_man_humification fraction of manure already humidified; default 0.192
+#'
+#' @description
+#' prepares management configuration
+#' Can be used in two ways: from the management template (csv file exported using export_management_template()) or using fixed monthly values
+#' In the first approach the user can specify directly in the csv file the monthly allocation fractions - please note plant is used if there are no crop rotations or otherwise use grain and crop allocation fractions
+#' In the second approach, the user can specify, using a vector of length 12 the different allocations
 #'
 #' @return
 #' @export
 #'
-#' @examples
-management_config = function(f_man_humification=0.192,
-                             plant_monthly_allocation = c(0,0,0,.08,.12,.16,.64,0,0,0,0,0),
-                             manure_monthly_allocation = c(0,0,1,0,0,0,0,0,0,0,0,0)) {
+#' @examples management_config(f_man_humification=0.192, plant_monthly_allocation=c(0,0,0,.08,.12,.16,.64,0,0,0,0,0), manure_monthly_allocation = c(0,0,1,0,0,0,0,0,0,0,0,0))
+#' @examples management_config(management_filepath='./management_template.csv, f_man_humification=0.192)
+management_config = function(management_filepath = NULL,
+                             plant_monthly_allocation=NULL,
+                             grain_monthly_allocation=NULL,
+                             grass_monthly_allocation=NULL,
+                             manure_monthly_allocation=NULL,
+                             f_man_humification=0.192) {
 
-  if (length(plant_monthly_allocation)!=12 | length(manure_monthly_allocation)!=12) {
-    stop('Vector must be of length 12 (1 for each month).')
+  if (missing(management_filepath)==F) {
+
+    df = read.csv(management_filepath) # note: there is an unneeded overhead here (read.csv twice from management and Cin!)
+
+    # apply some conditions, these are not implement ad nauseam, needs common sense
+    if (length(which(names(df) %in% c('plant_monthly_allocation','grain_monthly_allocation','grass_monthly_allocation')))!=3) { stop('Please either use plant allocation or grain/grass rotation!') }
+    if (length(which(names(df) %in% 'manure_monthly_allocation'))!=3) { stop('Even if no manure is used, make sure this column exists all all is set to 0') }
+
+    return(list(
+      f_man_humification = df$f_man_humification,
+      plant_monthly_allocation = df$plant_monthly_allocation,
+      grain_monthly_allocation = df$grain_monthly_allocation,
+      grass_monthly_allocation = df$grass_monthly_allocation,
+      manure_monthly_allocation = df$manure_monthly_allocation
+    ))
   }
   else {
-    return(list(
-      f_man_humification = f_man_humification,
-      plant_monthly_allocation = plant_monthly_allocation,
-      manure_monthly_allocation = manure_monthly_allocation
-    ))
+    # if no management template is given, prepare vectorization
+    # note this is set to fixed monthly values
+    if (length(plant_monthly_allocation)!=12 | length(manure_monthly_allocation)!=12 | length(grain_monthly_allocation)!=12 | length(grass_monthly_allocation)!=12) {
+      stop('Vector must be of length 12 (1 for each month).')
+    }
+    else {
+      return(list(
+        f_man_humification = f_man_humification,
+        plant_monthly_allocation = plant_monthly_allocation,
+        grain_monthly_allocation = grain_monthly_allocation,
+        grass_monthly_allocation = grass_monthly_allocation,
+        manure_monthly_allocation = manure_monthly_allocation
+      ))
+    }
+
   }
 }
 
@@ -127,11 +177,16 @@ management_config = function(f_man_humification=0.192,
 #' @param ftr transport rate
 #' @param ini_Cin_top initial C inputs topsoil
 #' @param ini_Cin_sub initial C inputs subsoil
-#' @description soil configuration params
+#'
+#' @description
+#'  sets soil configuration parameters
+#'
 #' @return
 #' @export
 #'
-#' @examples
+#' @examples soil_config(Csoil_init=72, f_hum_top=0.5)
+#' @examples soil_config()
+#' @examples soil_config(Csoil_init=72, f_hum_top=0.5, clay_sub = 0.35, clay_top=0.25, Cproptop=0.6)
 soil_config = function(Csoil_init = 70.4,
                        f_hum_top = 0.48,
                        f_rom_top = 0.49,
@@ -182,10 +237,15 @@ soil_config = function(Csoil_init = 70.4,
 #'Denmark with a high C/N ratio. If such a function is not used, the simulation of Danish sandy soils
 #'will exhibit clear declines in SOC, in contrast to the general build-up of SOC on these soils reported
 #'by Heidmann et al. (2001).
+#'
 #' @param cn soil CN
 #' @param f_hum initial hum fraction
 #' @param f_rom initial rom fraction
 #' @param ini_Cin initial C inputs
+#'
+#' @description
+#' A short description...
+#'
 #' @export
 #' @examples pool_cn(cn=12,HUM_frac = 0.33, C_0=75)
 .pool_cn = function(cn,
@@ -218,11 +278,14 @@ soil_config = function(Csoil_init = 70.4,
 #'
 #' @param cn soil carbon:nitrogen ratio
 #' @param soil_config soil configuration file (list)
-#' @description initializes top and bottom soil pools
+#'
+#' @description
+#' initializes top and bottom soil pools
+#'
 #' @return list with the initialized top and bottom soil pool
 #' @export
 #'
-#' @examples
+#' @examples initialize_soil_pools(cn=15, soil_config = s_config)
 initialize_soil_pools = function(cn,
                                  soil_config) {
 
