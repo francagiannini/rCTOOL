@@ -9,7 +9,6 @@
 #' @return data.frame containing monthly temperatures as well as temperature range for a given daily temperature data
 #' @export
 #'
-#' @examples convert_day_to_monthly_temperatures(file='./data/tempfile.csv')
 #' @examples convert_day_to_monthly_temperatures(file=temperature_df)
 convert_day_to_monthly_temperatures = function(file) {
 
@@ -93,7 +92,6 @@ populate_temperature = function(coords = c(9.114015,55.47163),
 #' @return dataframe with at least average temperature and temperature range, can include month and years, depending on approach
 #' @export
 #'
-#' @examples set_monthly_temperature_data(file='./data/temp.csv')
 #' @examples set_monthly_temperature_data(file=df_temp)
 #' @examples set_monthly_temperature_data(coords = c(9.114015,55.47163), yr_start=2006, yr_end=2010)
 #' @examples set_monthly_temperature_data(coords = c(9.114015,55.47163), yr_start='2006-01-01, yr_end='2010-01-01')
