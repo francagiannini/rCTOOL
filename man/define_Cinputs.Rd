@@ -5,16 +5,14 @@
 \title{define_Cinputs}
 \usage{
 define_Cinputs(
-  df_Cin = NULL,
+  management_filepath = NULL,
   Cin_top = NULL,
   Cin_sub = NULL,
   Cin_man = NULL,
-  time_config
+  time_config = NULL
 )
 }
 \arguments{
-\item{df_Cin}{dataframe with the following cols: Cin_top (residues topsoil), Cin_sub (residues subsoil), Cin_man (Manure)}
-
 \item{Cin_top}{C input from residues on topsoil}
 
 \item{Cin_sub}{C input from residues on subsoil}
@@ -22,6 +20,8 @@ define_Cinputs(
 \item{Cin_man}{C input from manure}
 
 \item{time_config}{config of timeperiod}
+
+\item{df_Cin}{dataframe with the following cols: Cin_top (residues topsoil), Cin_sub (residues subsoil), Cin_man (Manure)}
 }
 \description{
 explicits C inputs from plants and manure

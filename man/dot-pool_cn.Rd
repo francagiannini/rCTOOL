@@ -16,6 +16,9 @@
 \item{ini_Cin}{initial C inputs}
 }
 \description{
+A short description...
+}
+\details{
 This function helps to modify the parametrization of the initial pool distribution
 according thesoil  C/N ratio.
 When the C/N ratio is above the threshold of 10.8, the initial content of C in ROM is adjusted upwards, so that the relative turnover

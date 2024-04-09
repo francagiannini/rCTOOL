@@ -4,13 +4,19 @@
 \alias{define_timeperiod}
 \title{define_timeperiod}
 \usage{
-define_timeperiod(yr_start = 2006, yr_end = 2010)
+define_timeperiod(yr_start, yr_end)
 }
 \arguments{
 \item{yr_start}{initial simulation year}
 
 \item{yr_end}{end simulation year}
 }
+\value{
+list with 2 indexes; index 1 is a dataframe teplate (cols month, yr and annual timestep) and index 2 is the number of months
+}
 \description{
-creates a
+creates a dataframe template with the months, yrs and annual timesteps
+}
+\examples{
+define_timeperiod(yr_start=2006, yr_end=2010)
 }

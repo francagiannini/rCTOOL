@@ -19,8 +19,7 @@ soil_config(
   k_fom = 0.12,
   k_hum = 0.0028,
   k_rom = 3.85e-05,
-  ftr = 0.0025,
-  cn = 7.166667
+  ftr = 0.0025
 )
 }
 \arguments{
@@ -54,12 +53,15 @@ soil_config(
 
 \item{ftr}{transport rate}
 
-\item{cn}{soil Carbon:Nitrogen ratio}
-
 \item{ini_Cin_top}{initial C inputs topsoil}
 
 \item{ini_Cin_sub}{initial C inputs subsoil}
 }
 \description{
-soil configuration params
+sets soil configuration parameters
+}
+\examples{
+soil_config(Csoil_init=72, f_hum_top=0.5)
+soil_config()
+soil_config(Csoil_init=72, f_hum_top=0.5, clay_sub = 0.35, clay_top=0.25, Cproptop=0.6)
 }

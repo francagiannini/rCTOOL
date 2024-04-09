@@ -4,10 +4,18 @@
 \alias{run_ctool}
 \title{run_ctool}
 \usage{
-run_ctool(time_config, cin_config, m_config, t_config, s_config, soil_pools)
+run_ctool(
+  time_config,
+  cin_config,
+  m_config,
+  t_config,
+  s_config,
+  soil_pools,
+  verbose = F
+)
 }
 \arguments{
-\item{soil_pools}{}
+\item{verbose}{logical; if TRUE, provide check balance (needs to be 0 or really close to it)}
 }
 \description{
 run_ctool
