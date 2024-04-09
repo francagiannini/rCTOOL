@@ -31,7 +31,6 @@ Approach 2 - if the user does not have temperature data, coordinates and simulat
 Approach 3 - User can directly specify Average temperature and range in vectors using the argumemnts "Tavg" and "Range"
 }
 \examples{
-set_monthly_temperature_data(file='./data/temp.csv')
 set_monthly_temperature_data(file=df_temp)
 set_monthly_temperature_data(coords = c(9.114015,55.47163), yr_start=2006, yr_end=2010)
 set_monthly_temperature_data(Tavg = c(5,6,7,8,9,15,14,11,10,9,5,1), Range = c(3.5,5.5,6,6.5,12,6,4.4,8.8,11.1,13.1,6.6))

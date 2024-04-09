@@ -17,6 +17,5 @@ reads file, identify whether file is a filepath or a dataframe containing the da
 calculates monthly mean Tmax, Tmin, Tavg as well as temperature range
 }
 \examples{
-convert_day_to_monthly_temperatures(file='./data/tempfile.csv')
 convert_day_to_monthly_temperatures(file=temperature_df)
 }
