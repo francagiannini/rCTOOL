@@ -20,6 +20,8 @@ turnover = function(timestep,
                     s_config,
                     out) {
 
+  options(digits=4)
+
   mon = time_config$timeperiod[timestep,'mon']
   yr = time_config$timeperiod[timestep,'id']
   #print(paste0('Yr No. ',yr,' Month no ',mon))
@@ -71,6 +73,7 @@ turnover = function(timestep,
 #' @param t_config
 #' @param s_config
 #' @param soil_pools
+#' @param verbose logical; if TRUE, provide check balance (needs to be 0 or really close to it)
 #'
 #' @return
 #' @export
@@ -82,7 +85,8 @@ run_ctool = function(time_config,
                      m_config,
                      t_config,
                      s_config,
-                     soil_pools) {
+                     soil_pools,
+                     verbose=F) {
 
   simul=1:time_config$steps
   out_init = as.data.frame(soil_pools)
@@ -101,5 +105,6 @@ run_ctool = function(time_config,
   #  return(out)
   #})
   ctool = data.table::rbindlist(st)
+  if (verbose==T) { ctool = check_balance(ctool) }
   return(cbind(time_config$timeperiod[,c('mon','yrs')], ctool))
 }
