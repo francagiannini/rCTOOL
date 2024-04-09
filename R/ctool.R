@@ -42,10 +42,10 @@ turnover = function(timestep,
 
   # ROM ----
   ROM_top = update_monthly_ROM_top(ROM_top_t1 = out$ROM_top, HUM_romified_top = HUM_top$HUM_romified_top)
-  ROM_top = ROM_top_calculations(ROM_top_t = ROM_top, month = mon, t_avg = t_config$Tavg[timestep], t_range=t_config$Trange_col[mon], s_config = s_config)
+  ROM_top = ROM_top_calculations(ROM_top_t = ROM_top, month = mon, t_avg = t_config$Tavg[timestep], t_range=t_config$Range[mon], s_config = s_config)
 
   ROM_sub = update_monthly_ROM_sub(ROM_sub_t1 = out$ROM_sub, HUM_romified_sub = HUM_sub$HUM_romified_sub, ROM_transport = ROM_top$ROM_tr)
-  ROM_sub = ROM_sub_calculations(ROM_sub_t = ROM_sub, month = mon, t_avg = t_config$Tavg[timestep], t_range=t_config$Trange_col[mon], s_config = s_config)
+  ROM_sub = ROM_sub_calculations(ROM_sub_t = ROM_sub, month = mon, t_avg = t_config$Tavg[timestep], t_range=t_config$Range[mon], s_config = s_config)
 
   return(as.data.frame(list(
     FOM_top,
