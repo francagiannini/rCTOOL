@@ -18,7 +18,8 @@ define_timeperiod = function(yr_start,
 
   return(list(
     timeperiod = timeperiod,
-    steps = nrow(timeperiod)))
+    steps = nrow(timeperiod))
+  )
 }
 
 

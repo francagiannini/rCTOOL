@@ -14,7 +14,7 @@ management_config(
 )
 }
 \arguments{
-\item{management_filepath}{filepath for the management template (see export_management_template())}
+\item{management_filepath}{filepath (or file!) for the management template (see export_management_template())}
 
 \item{plant_monthly_allocation}{monthly distribution of plant C inputs; default c(0,0,0,.08,.12,.16,.64,0,0,0,0,0)}
 

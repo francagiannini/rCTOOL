@@ -13,6 +13,8 @@ define_Cinputs(
 )
 }
 \arguments{
+\item{management_filepath}{filepath (or file!) for the management template (see export_management_template())}
+
 \item{Cin_top}{C input from residues on topsoil}
 
 \item{Cin_sub}{C input from residues on subsoil}
