@@ -7,8 +7,6 @@
 update_monthly_ROM_top(ROM_top_t1, HUM_romified_top)
 }
 \arguments{
-\item{ROM_top_t1}{}
-
 \item{HUM_romified_top}{}
 }
 \description{

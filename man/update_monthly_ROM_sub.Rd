@@ -7,10 +7,6 @@
 update_monthly_ROM_sub(ROM_sub_t1, HUM_romified_sub, ROM_transport)
 }
 \arguments{
-\item{ROM_sub_t1}{}
-
-\item{HUM_romified_sub}{}
-
 \item{ROM_transport}{}
 }
 \description{

@@ -7,14 +7,6 @@
 update_monthly_HUM_top(HUM_top_t1, C_in_man, FOM_humified_top, month, m_config)
 }
 \arguments{
-\item{HUM_top_t1}{}
-
-\item{C_in_man}{}
-
-\item{FOM_humified_top}{}
-
-\item{month}{}
-
 \item{m_config}{}
 }
 \description{

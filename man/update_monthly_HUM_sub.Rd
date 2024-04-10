@@ -7,10 +7,6 @@
 update_monthly_HUM_sub(HUM_sub_t1, HUM_transport, FOM_humified_sub)
 }
 \arguments{
-\item{HUM_sub_t1}{}
-
-\item{HUM_transport}{}
-
 \item{FOM_humified_sub}{}
 }
 \description{

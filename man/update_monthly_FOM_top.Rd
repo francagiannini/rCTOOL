@@ -7,15 +7,7 @@
 update_monthly_FOM_top(FOM_top_t1, Cin_plant_top, Cin_manure, month, m_config)
 }
 \arguments{
-\item{FOM_top_t1}{}
-
-\item{Cin_manure}{}
-
-\item{month}{}
-
 \item{m_config}{management configuration list}
-
-\item{Cin_plant}{}
 }
 \description{
 update_FOM_top

@@ -13,14 +13,6 @@ update_monthly_FOM_sub(
 )
 }
 \arguments{
-\item{FOM_sub_t1}{}
-
-\item{FOM_transport}{}
-
-\item{C_in_plant_sub}{}
-
-\item{month}{}
-
 \item{m_config}{}
 }
 \description{
