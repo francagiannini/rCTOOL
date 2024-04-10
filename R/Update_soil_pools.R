@@ -31,7 +31,7 @@
     m_config$plant_monthly_allocation = m_config$grain_monthly_allocation + m_config$grass_monthly_allocation
     m_config$grain_monthly_allocation = NULL; m_config$grass_monthly_allocation = NULL
   }
-  else if (len == 1) {
+  else if (len_cond == 1) {
     # if len == 1, set that to plant allocation; if different than plant, provide message confirming highlighting input data given
     selected_param = allocation_params[which(c(allocation_params %in% idx_name))]
     if (selected_param != 'plant_monthly_allocation') {
@@ -39,7 +39,7 @@
     }
     m_config$plant_monthly_allocation = m_config[[selected_param]]
   }
-  else if (len == 2) {
+  else if (len_cond == 2) {
     # if len == 2, check if it is grain and grass, if it is, add those fractions, otherwise stop
     selected_params = allocation_params[which(c(allocation_params %in% idx_name))]
 

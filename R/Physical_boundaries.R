@@ -30,14 +30,16 @@ define_physical_boundaries = function(value, min_limit, max_limit) {
 #' Includes initial c soil, sum of inputs, SOC stocks and CO2 emissions
 #' needs to be 0 or really close to 0
 #' used in run_ctool (ctool.R)
+#'
 #' @return
+#'
 #' @export
 #'
 #' @examples
 check_balance = function(ctool_output,
                          cin_config,
                          s_config) {
-
+  #TODO: if C inputs are given in a monthly dataframe, dont sum all vector, need to account for monthly allocation!
 
   initial = s_config$Csoil_init
   inputs = sum(cin_config$Cin_top) + sum(cin_config$Cin_sub) + sum(cin_config$Cin_man)
@@ -52,6 +54,7 @@ check_balance = function(ctool_output,
     }
     else {
       print('Check balance does not added up; please check this')
+      print(paste0('Balance is ', balance))
       return(ctool_output)
     }
   }
