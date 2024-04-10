@@ -95,6 +95,7 @@ run_ctool = function(time_config,
   out_init = as.data.frame(soil_pools)
 
   # test simulation loop code
+
   st = list(length=time_config$steps)
   for (i in simul) {
     if (i==1) {  st[[i]] = turnover(timestep = i, time_config = time_config, cin_config = cin_config, m_config = m_config, t_config = t_config, s_config = s_config, out = out_init) }
@@ -102,11 +103,6 @@ run_ctool = function(time_config,
       st[[i]] = turnover(timestep = i, time_config = time_config, cin_config = cin_config, m_config = m_config, t_config = t_config, s_config = s_config, out = st[[i-1]])
     }
   }
-  # lapply is better here but out is not stored properly
-#  ctool = lapply(simul, function(tstp) {
- #   out = turnover(timestep = tstp, time_config = time_config, cin_config = cin_config, m_config = m_config, t_config = t_config, s_config = s_config, out = out)
-  #  return(out)
-  #})
   ctool = data.table::rbindlist(st)
   if (verbose==T) { ctool = check_balance(ctool_output = ctool, cin_config = cin_config, s_config = s_config) }
   return(cbind(time_config$timeperiod[,c('mon','yrs')], ctool))
