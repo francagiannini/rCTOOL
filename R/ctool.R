@@ -26,6 +26,9 @@ turnover = function(timestep,
   yr = time_config$timeperiod[timestep,'id']
   #print(paste0('Yr No. ',yr,' Month no ',mon))
 
+  # read management config (allocations) and adapt it
+  m_config = .clean_monthly_allocations(m_config)
+
   # FOM ----
   FOM_top = update_monthly_FOM_top(FOM_top_t1 = out$FOM_top, Cin_plant_top = cin_config$Cin_top[yr] , Cin_manure = cin_config$Cin_man[yr], month = mon, m_config = m_config)
   FOM_top = FOM_top_calculations(FOM_top_t=FOM_top, month=mon, t_avg = t_config$Tavg[timestep], t_range=t_config$Range[timestep], s_config)
