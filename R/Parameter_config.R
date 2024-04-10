@@ -142,7 +142,7 @@ management_config = function(management_filepath = NULL,
     # apply some conditions here if needed, these are not implement ad nauseam, needs common sense
 
     return(list(
-      f_man_humification = df$f_man_humification,
+      f_man_humification = f_man_humification,
       plant_monthly_allocation = df$plant_monthly_allocation,
       grain_monthly_allocation = df$grain_monthly_allocation,
       grass_monthly_allocation = df$grass_monthly_allocation,
