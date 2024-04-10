@@ -108,3 +108,108 @@ output |>
   geom_smooth()
 ```
 
+## Management scenario example
+
+Loading scenario management for Askov. 
+```{r}
+# load data ----
+data('scenario')
+data('scenario_temperature') # this is equivalent to set_monthly_temperature_data(coords=c(9.114015, 55.47163), yr_start=1951, yr_end=2019)
+```
+
+The scenario dataset contains three different management scenarios: a football court with ryegrass, an organic dairy farming and a pet cemitery. What are the implications in terms of soil organic C dynamics? rCTOOL can be used to explore the implications.
+```{r ,echo = FALSE, message = FALSE}
+require('ggplot2')
+
+plot_df = reshape2::melt(scenario, c('mon','yrs','id','treatment'))
+plot_df = plot_df |> 
+  group_by(yrs, treatment, variable) |> 
+  summarize(value=mean(value))
+
+ggplot(data=subset(plot_df, value!=0), aes(x=yrs, y=value, colour=treatment)) + 
+  geom_line(size=.8) + 
+  facet_wrap(.~variable) + 
+  theme_bw() + 
+  labs(x='Management', y='Carbon inputs (tonnes/ha)', colour='Treatment') + 
+  scale_y_continuous(expand=c(0,0), limits=c(0,4.5), breaks=seq(0,4,1)) + 
+  scale_x_continuous(expand=c(0,0)) + 
+  theme(text = element_text(size=16, family='serif'),
+        axis.title = element_text(size=17, face='bold'),
+        axis.text = element_text(size=16))
+```
+Provide timeperiod, management and soil config; initialize soil pools.
+```{r}
+period = define_timeperiod(yr_start = 1951, yr_end = 2019)
+
+management = management_config(
+  manure_monthly_allocation = c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+  plant_monthly_allocation = c(0, 0, 0, 8, 12, 16, 64, 0, 0, 0, 0, 0) / 100
+) # set to default
+
+soil = soil_config(Csoil_init = 100,
+                   f_hum_top = 0.4803,
+                   f_rom_top = 0.4881,
+                   f_hum_sub = 0.3123,
+                   f_rom_sub = 0.6847,
+                   Cproptop = 0.47,
+                   clay_top = 0.1,
+                   clay_sub = 0.15,
+                   phi = 0.035,
+                   f_co2 = 0.628,
+                   f_romi = 0.012,
+                   k_fom  = 0.12,
+                   k_hum = 0.0028, 
+                   k_rom = 3.85e-5,
+                   ftr = 0.003)
+soil_pools = initialize_soil_pools(cn = 10, soil_config = soil)
+```
+
+Provide configuration for each treatment/scenario.
+[This raises the question of whether we should also account for this kind of flexibility]
+```{r}
+treatment = unique(scenario$treatment)
+cin_treatment = lapply(treatment, function(x) { define_Cinputs(management_filepath = subset(scenario, treatment==x)) })
+names(cin_treatment) = treatment
+```
+
+Run simulation for each treatment/scenario.
+```{r}
+output_treatment = lapply(treatment, function(x) {
+  output = run_ctool(time_config = period, 
+            cin_config = cin_treatment[[x]], 
+            m_config = management, 
+            t_config = scenario_temperature, 
+            s_config = soil, 
+            soil_pools = soil_pools)
+  output$treatment = x
+  return(output)
+})
+output_treatment = data.table::rbindlist(output_treatment)
+```
+
+Plot the impact on management of each treatment.
+```{r echo = FALSE, message = FALSE}
+
+plot_df = output_treatment[, c('mon','yrs','C_topsoil','C_subsoil','em_CO2_total', 'treatment')]
+plot_df = reshape2::melt(plot_df, c('mon','yrs','treatment'))
+
+labels = c(
+  C_topsoil = 'SOC topsoil',
+  C_subsoil = 'SOC subsoil',
+  em_CO2_total = 'CO2 emissions'
+)
+
+ggplot(plot_df, aes(x=yrs, y=value, colour=treatment)) + 
+  geom_line() + 
+  geom_smooth() +
+  facet_wrap(.~variable, scales = 'free_y', labeller = as_labeller(labels)) + 
+  theme_bw() + 
+  labs(x='Years', y='Output (tonnes/ha)', colour='Treatment') + 
+  scale_y_continuous(expand=c(0,0)) + 
+  scale_x_continuous(expand=c(0,0), breaks=c(1960, 2010)) + 
+  theme(text = element_text(size=16, family='serif'),
+        axis.title = element_text(size=17, face='bold'),
+        axis.text = element_text(size=16))
+```
+
+

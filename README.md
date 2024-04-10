@@ -121,3 +121,82 @@ output = run_ctool(time_config = period,
 
 We can plot the results.
 <img src="man/figures/README-pressure-1.png" width="100%" />
+
+## Management scenario example
+
+Loading scenario management for Askov.
+
+``` r
+# load data ----
+data('scenario')
+data('scenario_temperature') # this is equivalent to set_monthly_temperature_data(coords=c(9.114015, 55.47163), yr_start=1951, yr_end=2019)
+```
+
+The scenario dataset contains three different management scenarios: a
+football court with ryegrass, an organic dairy farming and a pet
+cemitery. What are the implications in terms of soil organic C dynamics?
+rCTOOL can be used to explore the implications.
+
+    #> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    #> ℹ Please use `linewidth` instead.
+    #> This warning is displayed once every 8 hours.
+    #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    #> generated.
+
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+Provide timeperiod, management and soil config; initialize soil pools.
+
+``` r
+period = define_timeperiod(yr_start = 1951, yr_end = 2019)
+
+management = management_config(
+  manure_monthly_allocation = c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+  plant_monthly_allocation = c(0, 0, 0, 8, 12, 16, 64, 0, 0, 0, 0, 0) / 100
+) # set to default
+
+soil = soil_config(Csoil_init = 100,
+                   f_hum_top = 0.4803,
+                   f_rom_top = 0.4881,
+                   f_hum_sub = 0.3123,
+                   f_rom_sub = 0.6847,
+                   Cproptop = 0.47,
+                   clay_top = 0.1,
+                   clay_sub = 0.15,
+                   phi = 0.035,
+                   f_co2 = 0.628,
+                   f_romi = 0.012,
+                   k_fom  = 0.12,
+                   k_hum = 0.0028, 
+                   k_rom = 3.85e-5,
+                   ftr = 0.003)
+soil_pools = initialize_soil_pools(cn = 10, soil_config = soil)
+```
+
+Provide configuration for each treatment/scenario. \[This raises the
+question of whether we should also account for this kind of
+flexibility\]
+
+``` r
+treatment = unique(scenario$treatment)
+cin_treatment = lapply(treatment, function(x) { define_Cinputs(management_filepath = subset(scenario, treatment==x)) })
+names(cin_treatment) = treatment
+```
+
+Run simulation for each treatment/scenario.
+
+``` r
+output_treatment = lapply(treatment, function(x) {
+  output = run_ctool(time_config = period, 
+            cin_config = cin_treatment[[x]], 
+            m_config = management, 
+            t_config = scenario_temperature, 
+            s_config = soil, 
+            soil_pools = soil_pools)
+  output$treatment = x
+  return(output)
+})
+output_treatment = data.table::rbindlist(output_treatment)
+```
+
+Plot the impact on management of each treatment.
+<img src="man/figures/README-unnamed-chunk-14-1.png" width="100%" />
