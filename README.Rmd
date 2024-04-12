@@ -128,7 +128,7 @@ plot_df = plot_df |>
 
 ggplot(data=subset(plot_df, value!=0), aes(x=yrs, y=value, colour=treatment)) + 
   geom_line(size=.8) + 
-  facet_wrap(.~variable) + 
+  facet_wrap(variable~., scales="free_y", ncol = 1,) + 
   theme_bw() + 
   labs(x='Management', y='Carbon inputs (tonnes/ha)', colour='Treatment') + 
   scale_y_continuous(expand=c(0,0), limits=c(0,4.5), breaks=seq(0,4,1)) + 
@@ -202,7 +202,8 @@ labels = c(
 ggplot(plot_df, aes(x=yrs, y=value, colour=treatment)) + 
   geom_line() + 
   geom_smooth() +
-  facet_wrap(.~variable, scales = 'free_y', labeller = as_labeller(labels)) + 
+  facet_wrap(variable~., scales = 'free_y', ncol = 1,
+             labeller = as_labeller(labels)) + 
   theme_bw() + 
   labs(x='Years', y='Output (tonnes/ha)', colour='Treatment') + 
   scale_y_continuous(expand=c(0,0)) + 
