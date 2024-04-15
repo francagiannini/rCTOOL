@@ -126,5 +126,4 @@ set_monthly_temperature_data = function(file=NULL,
 
     if (length(which(names(file) %in% c('Tavg','Range')))!=2) {stop('Make sure monthly temperature date contains Tavg and (temperature)Range.\nSee helper functions')}
   }
-  return(temp_df)
 }

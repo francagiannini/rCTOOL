@@ -35,25 +35,36 @@ ggplot(daily_clim, aes(x=month)) +
 
 # Converting daily data to monthly 
 
-Where only daily data are available (min and max temperature), rCTOOL provides built-in functions to seamlessly convert into monthly values.
+Where only daily data are available (min and max temperature), rCTOOL provides built-in functions to seamlessly convert into monthly values. The data.frame "mon_df" is the one need to be read by run_ctool.
 ```{r}
 daily_temp = read.csv('./Daily_data.csv')
 names(daily_temp)[c(4,5)] = c('Tmin','Tmax') # Data columns must, at least, contain Tmin and Tmax
 daily_temp$date = as.Date(paste(daily_temp$Year, daily_temp$Month, daily_temp$Day, sep = '-')) # a date column (YYYY-MM-DD) is also mandatory
 
 mon_df = convert_day_to_monthly_temperatures(daily_temp)
-
 ```
 
 
 ```{r fig.dim=c(15,10), echo = FALSE, message = FALSE }
-ggplot(df, aes(x=date, y=(Tmax+Tmin)/2, colour=(Tmax+Tmin)/2)) + 
+ggplot(daily_temp, aes(x=date, y=(Tmax+Tmin)/2, colour=(Tmax+Tmin)/2)) + 
   geom_point(size=.3, alpha=.5) +
   scale_colour_viridis_c(option = 'E') + 
   theme_bw() + 
-  labs(x='Timeperiod', y='Average daily temperature (ºC)', colour='') + 
+  labs(x='Timeperiod', y='Daily temperature (ºC)', colour='') + 
   theme(text = element_text(size=16, family='serif'),
       axis.title = element_text(size=17, face='bold'),
       axis.text = element_text(size=16))
+```
+
+```{r fig.dim=c(15,10), echo = FALSE, message = FALSE }
+ggplot(mon_df, aes(x=month, y=Tavg, colour=yr, group=yr)) + 
+  geom_line(size=1.1, alpha=.7) + 
+  scale_colour_viridis_c() + 
+  theme_bw() + 
+  labs(x='Months', y='Monthly temperature (ºC)', colour='Years') + 
+  scale_x_continuous(breaks=seq(1,12,1), expand=c(0,0)) + 
+  theme(text = element_text(size=16, family='serif'),
+        axis.title = element_text(size=17, face='bold'),
+        axis.text = element_text(size=16))
 ```
 
