@@ -1,0 +1,59 @@
+---
+output: github_document
+---
+
+```{r}
+library(rCTOOL)
+```
+
+
+Temperature data can be configured using different approaches in rCTOOL: scraping climate data using the R package "easyclimate", postprocessing daily climatic variables or by providing a filepath/data.frame of monthly temperature data.
+Please note that it is mandatory to provide, at least, minimum and maximum temperature. 
+
+# Populating climatic data 
+The easiest one requires only coordinates and the simulation timeperiod. Let us populate the daily and monthly data requirements for the Askov experimental station in Denmark.
+
+The code below provides a built-in function to scrape the daily climatic minimum and maximum temperatures using easyclimate, and postprocesses those data into monthly values. The postprocessing includes the calculation of the average temperature and temperature range. The function "set_monthly_temperature_data" calls "populate_temperature" to scrape easyclimate.
+```{r}
+daily_clim = set_monthly_temperature_data(coords = c(9.114015,55.47163), yr_start = 2010, yr_end = 2012)
+head(daily_clim, 5)
+```
+
+```{r echo = FALSE, message = FALSE}
+ggplot(daily_clim, aes(x=month)) + 
+  geom_point(aes(y=Tavg), colour='cadetblue4', size=1.5) + 
+  geom_line(aes(y=Tavg), colour='cadetblue') + 
+  geom_errorbar(aes(ymin=Tavg-Range, ymax=Tavg+Range), colour='cadetblue4') + 
+  facet_wrap(.~yr) + 
+  theme_bw() + 
+  labs(x='Months', y='Average temperature (ºC)') + 
+  scale_x_continuous(breaks=seq(1,12,2)) + 
+  theme(text = element_text(size=16, family='serif'),
+      axis.title = element_text(size=17, face='bold'),
+      axis.text = element_text(size=16))
+```
+
+# Converting daily data to monthly 
+
+Where only daily data are available (min and max temperature), rCTOOL provides built-in functions to seamlessly convert into monthly values.
+```{r}
+daily_temp = read.csv('./Daily_data.csv')
+names(daily_temp)[c(4,5)] = c('Tmin','Tmax') # Data columns must, at least, contain Tmin and Tmax
+daily_temp$date = as.Date(paste(daily_temp$Year, daily_temp$Month, daily_temp$Day, sep = '-')) # a date column (YYYY-MM-DD) is also mandatory
+
+mon_df = convert_day_to_monthly_temperatures(daily_temp)
+
+```
+
+
+```{r fig.dim=c(15,10), echo = FALSE, message = FALSE }
+ggplot(df, aes(x=date, y=(Tmax+Tmin)/2, colour=(Tmax+Tmin)/2)) + 
+  geom_point(size=.3, alpha=.5) +
+  scale_colour_viridis_c(option = 'E') + 
+  theme_bw() + 
+  labs(x='Timeperiod', y='Average daily temperature (ºC)', colour='') + 
+  theme(text = element_text(size=16, family='serif'),
+      axis.title = element_text(size=17, face='bold'),
+      axis.text = element_text(size=16))
+```
+
