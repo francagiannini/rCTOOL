@@ -167,26 +167,20 @@ data('scenario_temperature') # this is equivalent to set_monthly_temperature_dat
 The scenario data set contains three different C input estimation for
 the different scenarios:
 
-For the football court scenario we assume a well-maintained stomped
-ryegrass cover,
+- For the football court scenario we assume a well-maintained stomped
+  ryegrass cover,
 
-for the organic dairy farming we assume a crop rotation with grass,
-maize and cereals for happy milking cows,
+- for the organic dairy farming we assume a crop rotation with grass,
+  maize and cereals for happy milking cows,
 
-and finally for the pet cemetery we assume a less healthily reygrass and
-a certain number of beloved dogs and cats from Viborg municipality
-burred in the subsoil.
+- and finally for the pet cemetery we assume a less healthily reygrass
+  and a certain number of beloved dogs and cats from Viborg municipality
+  burred in the subsoil.
 
 Now we will play with rCTOOL to explore the implications in terms of
 soil C dynamics.
 
 First lets take a look on the C inputs distribution:
-
-    #> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-    #> ℹ Please use `linewidth` instead.
-    #> This warning is displayed once every 8 hours.
-    #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-    #> generated.
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
 
