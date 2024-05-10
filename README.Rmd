@@ -231,7 +231,7 @@ And the winning one is...
 
 Lets explore:
 
-```{r echo = FALSE, message = FALSE}
+```{r message = FALSE}
 
 plot_df <- output_treatment[, c('mon','yrs','C_topsoil','C_subsoil','em_CO2_total', 'treatment')]
 plot_df <- reshape2::melt(plot_df, c('mon','yrs','treatment'))

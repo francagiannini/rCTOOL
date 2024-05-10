@@ -244,11 +244,33 @@ And the winning one is…
 
 Lets explore:
 
+``` r
+
+plot_df <- output_treatment[, c('mon','yrs','C_topsoil','C_subsoil','em_CO2_total', 'treatment')]
+plot_df <- reshape2::melt(plot_df, c('mon','yrs','treatment'))
+
+labels <- c(
+  C_topsoil = 'SOC topsoil',
+  C_subsoil = 'SOC subsoil',
+  em_CO2_total = 'CO2 emissions'
+)
+
+ggplot(plot_df, aes(x=yrs, y=value, colour=treatment)) + 
+  geom_point(size=0.02, alpha=0.2) + 
+  geom_smooth() +
+  facet_wrap(variable~., scales = 'free_y', ncol = 1,
+             labeller = as_labeller(labels)) + 
+  labs(x='Years', y='Output (tonnes/ha)', colour='Treatment') + 
+  scale_x_continuous(breaks=c(1960, 2010))+ 
+  theme_classic() 
+```
+
 <img src="man/figures/README-unnamed-chunk-14-1.png" width="100%" />
 
 # References
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-jensen22" class="csl-entry">
 
