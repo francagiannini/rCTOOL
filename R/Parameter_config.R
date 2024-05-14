@@ -129,7 +129,7 @@ management_config = function(management_filepath = NULL,
                              grain_monthly_allocation=NULL,
                              grass_monthly_allocation=NULL,
                              manure_monthly_allocation=NULL,
-                             f_man_humification=0.192) {
+                             f_man_humification=0.12) {
 
   if (missing(management_filepath)==F) {
 
