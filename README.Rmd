@@ -117,10 +117,64 @@ output |>
   theme_classic()
 ```
 
+Let's explore the output data frame.
+
+Time period variables:
+
+- `mon`: month of the year (1-12)
+- `yrs`: year of the simulation
+
+C fluxes variables by depth (Mg/ha):
+
+- `C_topsoil`: Carbon stock in the topsoil (0-25 cm)
+- `C_subsoil`: Carbon stock in the subsoil (26-100 cm)
+- `SOC_stock`: Total Soil Organic Carbon stock in the soil (0-100 cm)
+- `C_transport`: Carbon transported to the subsoil
+- `em_CO2_top`: Total CO2 emissions from the topsoil
+- `em_CO2_sub`: Total CO2 emissions from the subsoil
+- `em_CO2_total`: Total CO2 emissions from the soil
+
+C pools variables (Mg/ha):
+
+Fresh Organic Matter (FOM) pool
+- `FOM_top`: FOM in the topsoil
+- `FOM_top_decomposition`: Monthly decomposition of FOM in the topsoil
+- `substrate_FOM_decomp_top`: Substrate for FOM decomposition in the topsoil
+- `FOM_humified_top`: FOM that has been humified in the topsoil (becomes part of topsoil HUM)
+- `em_CO2_FOM_top`: CO2 emissions from the decomposition of FOM in the topsoil
+- `FOM_tr`: FOM transported from the topsoil to the subsoil
+- `FOM_sub`: FOM in the subsoil
+- `FOM_sub_decomposition`: Decomposition of FOM in the subsoil
+- `substrate_FOM_decomp_sub`: Substrate for FOM decomposition in the subsoil
+- `FOM_humified_sub`: FOM that has been humified in the subsoil (becomes part of subsoil HUM)
+- `em_CO2_FOM_sub`: CO2 emissions from the decomposition of FOM in the subsoil
+
+Humified Organic Matter (HUM) pool
+- `HUM_top`: HUM in the topsoil
+- `HUM_top_decomposition`: Decomposition of HUM in the topsoil
+- `substrate_HUM_decomp_top`: Substrate for HUM decomposition in the topsoil
+- `HUM_romified_top`: HUM that has been "romified" in the topsoil (becomes part of topsoil ROM)
+- `em_CO2_HUM_top`: CO2 emissions from the decomposition of HUM in the topsoil
+- `HUM_tr`: HUM transported from the topsoil to the subsoil
+- `HUM_sub`: HUM in the subsoil
+- `HUM_sub_decomposition`: Decomposition of HUM in the subsoil
+- `substrate_HUM_decomp_sub`: Substrate for HUM decomposition in the subsoil
+- `HUM_romified_sub`: HUM that has been "romified" in the subsoil (becomes part of subsoil ROM)
+- `em_CO2_HUM_sub`: CO2 emissions from the decomposition of HUM in the subsoil
+
+Resistant Organic Matter (ROM) pool
+- `ROM_top`: ROM in the topsoil
+- `ROM_top_decomposition`: Decomposition of ROM in the topsoil
+- `substrate_ROM_decomp_top`: Substrate for ROM decomposition in the topsoil
+- `em_CO2_ROM_top`: CO2 emissions from the decomposition of ROM in the topsoil
+- `ROM_tr`: ROM transported from the topsoil to the subsoil
+- `ROM_sub`: ROM in the subsoil
+- `ROM_sub_decomposition`: Decomposition of ROM in the subsoil
+- `substrate_ROM_decomp_sub`: Substrate for ROM decomposition in the subsoil
+- `em_CO2_ROM_sub`: CO2 emissions from the decomposition of ROM in the subsoil
 
 
-
-## Comparing multiple scenario toy example
+## Comparing multiple scenarios toy example
 
 Aiming to show how to run and compare multiple scenarios, 
 we have set ourselves the following challenge:
@@ -169,7 +223,7 @@ ggplot(data = subset(plot_df, value != 0),
        aes(x = yrs, y = value, colour = treatment)) +
   geom_line(size = .8) +
   facet_wrap(variable ~ ., scales = "free_y", ncol = 1, ) +
-  labs(x = 'Management', y = 'Carbon inputs (tonnes/ha)', colour = 'Treatment')+
+  labs(x = 'Management', y = 'Carbon inputs (Mg/ha)', colour = 'Treatment')+
   theme_classic() 
 ```
 
@@ -247,7 +301,7 @@ ggplot(plot_df, aes(x=yrs, y=value, colour=treatment)) +
   geom_smooth() +
   facet_wrap(variable~., scales = 'free_y', ncol = 1,
              labeller = as_labeller(labels)) + 
-  labs(x='Years', y='Output (tonnes/ha)', colour='Treatment') + 
+  labs(x='Years', y='Output (Mg/ha)', colour='Treatment') + 
   scale_x_continuous(breaks=c(1960, 2010))+ 
   theme_classic() 
 ```

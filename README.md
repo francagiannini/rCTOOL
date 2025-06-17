@@ -309,6 +309,13 @@ Carbon Storage in Temperate Agricultural Soils.” Journal Article.
 *Ecological Modelling* 292: 11–25.
 https://doi.org/<https://doi.org/10.1016/j.ecolmodel.2014.08.016>.
 
-</div>
+</div id="GIANNINIKURINA2025106229" class="csl-entry">
+
+Giannini-Kurina, F., Serra, J., Christensen, B.T., Eriksen, J., 
+Hutchings, N.J., Olesen, J.E. and Jensen, J.L., 2025. 
+Modelling and validating soil carbon dynamics at the long-term 
+plot scale using the rCTOOL R package. 
+*Environmental Modelling & Software*, 183, p.106229.
+<https://doi.org/10.1016/j.envsoft.2024.106229>.
 
 </div>
