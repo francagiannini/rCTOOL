@@ -4,6 +4,7 @@
 # rCTOOL
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 rCTOOL is an open-source R package, that encapsulates the capabilities
@@ -140,7 +141,62 @@ output |>
 
 <img src="man/figures/README-pressure-1.png" width="100%" />
 
-## Comparing multiple scenario toy example
+Let’s explore the output data frame.
+
+Time period variables:
+
+- `mon`: month of the year (1-12)
+- `yrs`: year of the simulation
+
+C fluxes variables by depth (Mg/ha):
+
+- `C_topsoil`: Carbon stock in the topsoil (0-25 cm)
+- `C_subsoil`: Carbon stock in the subsoil (26-100 cm)
+- `SOC_stock`: Total Soil Organic Carbon stock in the soil (0-100 cm)
+- `C_transport`: Carbon transported to the subsoil
+- `em_CO2_top`: Total CO2 emissions from the topsoil
+- `em_CO2_sub`: Total CO2 emissions from the subsoil
+- `em_CO2_total`: Total CO2 emissions from the soil
+
+C pools variables (Mg/ha):
+
+Fresh Organic Matter (FOM) pool - `FOM_top`: FOM in the topsoil -
+`FOM_top_decomposition`: Monthly decomposition of FOM in the topsoil -
+`substrate_FOM_decomp_top`: Substrate for FOM decomposition in the
+topsoil - `FOM_humified_top`: FOM that has been humified in the topsoil
+(becomes part of topsoil HUM) - `em_CO2_FOM_top`: CO2 emissions from the
+decomposition of FOM in the topsoil - `FOM_tr`: FOM transported from the
+topsoil to the subsoil - `FOM_sub`: FOM in the subsoil -
+`FOM_sub_decomposition`: Decomposition of FOM in the subsoil -
+`substrate_FOM_decomp_sub`: Substrate for FOM decomposition in the
+subsoil - `FOM_humified_sub`: FOM that has been humified in the subsoil
+(becomes part of subsoil HUM) - `em_CO2_FOM_sub`: CO2 emissions from the
+decomposition of FOM in the subsoil
+
+Humified Organic Matter (HUM) pool - `HUM_top`: HUM in the topsoil -
+`HUM_top_decomposition`: Decomposition of HUM in the topsoil -
+`substrate_HUM_decomp_top`: Substrate for HUM decomposition in the
+topsoil - `HUM_romified_top`: HUM that has been “romified” in the
+topsoil (becomes part of topsoil ROM) - `em_CO2_HUM_top`: CO2 emissions
+from the decomposition of HUM in the topsoil - `HUM_tr`: HUM transported
+from the topsoil to the subsoil - `HUM_sub`: HUM in the subsoil -
+`HUM_sub_decomposition`: Decomposition of HUM in the subsoil -
+`substrate_HUM_decomp_sub`: Substrate for HUM decomposition in the
+subsoil - `HUM_romified_sub`: HUM that has been “romified” in the
+subsoil (becomes part of subsoil ROM) - `em_CO2_HUM_sub`: CO2 emissions
+from the decomposition of HUM in the subsoil
+
+Resistant Organic Matter (ROM) pool - `ROM_top`: ROM in the topsoil -
+`ROM_top_decomposition`: Decomposition of ROM in the topsoil -
+`substrate_ROM_decomp_top`: Substrate for ROM decomposition in the
+topsoil - `em_CO2_ROM_top`: CO2 emissions from the decomposition of ROM
+in the topsoil - `ROM_tr`: ROM transported from the topsoil to the
+subsoil - `ROM_sub`: ROM in the subsoil - `ROM_sub_decomposition`:
+Decomposition of ROM in the subsoil - `substrate_ROM_decomp_sub`:
+Substrate for ROM decomposition in the subsoil - `em_CO2_ROM_sub`: CO2
+emissions from the decomposition of ROM in the subsoil
+
+## Comparing multiple scenarios toy example
 
 Aiming to show how to run and compare multiple scenarios, we have set
 ourselves the following challenge:
@@ -260,7 +316,7 @@ ggplot(plot_df, aes(x=yrs, y=value, colour=treatment)) +
   geom_smooth() +
   facet_wrap(variable~., scales = 'free_y', ncol = 1,
              labeller = as_labeller(labels)) + 
-  labs(x='Years', y='Output (tonnes/ha)', colour='Treatment') + 
+  labs(x='Years', y='Output (Mg/ha)', colour='Treatment') + 
   scale_x_continuous(breaks=c(1960, 2010))+ 
   theme_classic() 
 ```
@@ -309,13 +365,6 @@ Carbon Storage in Temperate Agricultural Soils.” Journal Article.
 *Ecological Modelling* 292: 11–25.
 https://doi.org/<https://doi.org/10.1016/j.ecolmodel.2014.08.016>.
 
-</div id="GIANNINIKURINA2025106229" class="csl-entry">
-
-Giannini-Kurina, F., Serra, J., Christensen, B.T., Eriksen, J., 
-Hutchings, N.J., Olesen, J.E. and Jensen, J.L., 2025. 
-Modelling and validating soil carbon dynamics at the long-term 
-plot scale using the rCTOOL R package. 
-*Environmental Modelling & Software*, 183, p.106229.
-<https://doi.org/10.1016/j.envsoft.2024.106229>.
+</div>
 
 </div>
