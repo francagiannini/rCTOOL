@@ -160,41 +160,61 @@ C fluxes variables by depth (Mg/ha):
 
 C pools variables (Mg/ha):
 
-Fresh Organic Matter (FOM) pool - `FOM_top`: FOM in the topsoil -
-`FOM_top_decomposition`: Monthly decomposition of FOM in the topsoil -
-`substrate_FOM_decomp_top`: Substrate for FOM decomposition in the
-topsoil - `FOM_humified_top`: FOM that has been humified in the topsoil
-(becomes part of topsoil HUM) - `em_CO2_FOM_top`: CO2 emissions from the
-decomposition of FOM in the topsoil - `FOM_tr`: FOM transported from the
-topsoil to the subsoil - `FOM_sub`: FOM in the subsoil -
-`FOM_sub_decomposition`: Decomposition of FOM in the subsoil -
-`substrate_FOM_decomp_sub`: Substrate for FOM decomposition in the
-subsoil - `FOM_humified_sub`: FOM that has been humified in the subsoil
-(becomes part of subsoil HUM) - `em_CO2_FOM_sub`: CO2 emissions from the
-decomposition of FOM in the subsoil
+Fresh Organic Matter (FOM) pool:
 
-Humified Organic Matter (HUM) pool - `HUM_top`: HUM in the topsoil -
-`HUM_top_decomposition`: Decomposition of HUM in the topsoil -
-`substrate_HUM_decomp_top`: Substrate for HUM decomposition in the
-topsoil - `HUM_romified_top`: HUM that has been “romified” in the
-topsoil (becomes part of topsoil ROM) - `em_CO2_HUM_top`: CO2 emissions
-from the decomposition of HUM in the topsoil - `HUM_tr`: HUM transported
-from the topsoil to the subsoil - `HUM_sub`: HUM in the subsoil -
-`HUM_sub_decomposition`: Decomposition of HUM in the subsoil -
-`substrate_HUM_decomp_sub`: Substrate for HUM decomposition in the
-subsoil - `HUM_romified_sub`: HUM that has been “romified” in the
-subsoil (becomes part of subsoil ROM) - `em_CO2_HUM_sub`: CO2 emissions
-from the decomposition of HUM in the subsoil
+- `FOM_top`: FOM in the topsoil
+- `FOM_top_decomposition`: Monthly decomposition of FOM in the topsoil
+- `substrate_FOM_decomp_top`: Substrate for FOM decomposition in the
+  topsoil
+- `FOM_humified_top`: FOM that has been “humified” in the topsoil
+  (becomes part of topsoil HUM)
+- `em_CO2_FOM_top`: CO2 emissions from the decomposition of FOM in the
+  topsoil
+- `FOM_tr`: FOM transported from the topsoil to the subsoil
+- `FOM_sub`: FOM in the subsoil
+- `FOM_sub_decomposition`: Decomposition of FOM in the subsoil
+- `substrate_FOM_decomp_sub`: Substrate for FOM decomposition in the
+  subsoil
+- `FOM_humified_sub`: FOM that has been “humified” in the subsoil
+  (becomes part of subsoil HUM)
+- `em_CO2_FOM_sub`: CO2 emissions from the decomposition of FOM in the
+  subsoil
 
-Resistant Organic Matter (ROM) pool - `ROM_top`: ROM in the topsoil -
-`ROM_top_decomposition`: Decomposition of ROM in the topsoil -
-`substrate_ROM_decomp_top`: Substrate for ROM decomposition in the
-topsoil - `em_CO2_ROM_top`: CO2 emissions from the decomposition of ROM
-in the topsoil - `ROM_tr`: ROM transported from the topsoil to the
-subsoil - `ROM_sub`: ROM in the subsoil - `ROM_sub_decomposition`:
-Decomposition of ROM in the subsoil - `substrate_ROM_decomp_sub`:
-Substrate for ROM decomposition in the subsoil - `em_CO2_ROM_sub`: CO2
-emissions from the decomposition of ROM in the subsoil
+Humified Organic Matter (HUM) pool:
+
+- `HUM_top`: HUM in the topsoil
+- `HUM_top_decomposition`: Decomposition of HUM in the topsoil
+- `substrate_HUM_decomp_top`: Substrate for HUM decomposition in the
+  topsoil
+- `HUM_romified_top`: HUM that has been “romified” in the topsoil
+  (becomes part of topsoil ROM)
+- `em_CO2_HUM_top`: CO2 emissions from the decomposition of HUM in the
+  topsoil
+- `HUM_tr`: HUM transported from the topsoil to the subsoil
+- `HUM_sub`: HUM in the subsoil
+- `HUM_sub_decomposition`: Decomposition of HUM in the subsoil
+- `substrate_HUM_decomp_sub`: Substrate for HUM decomposition in the
+  subsoil
+- `HUM_romified_sub`: HUM that has been “romified” in the subsoil
+  (becomes part of subsoil ROM)
+- `em_CO2_HUM_sub`: CO2 emissions from the decomposition of HUM in the
+  subsoil
+
+Resistant Organic Matter (ROM) pool:
+
+- `ROM_top`: ROM in the topsoil
+- `ROM_top_decomposition`: Decomposition of ROM in the topsoil
+- `substrate_ROM_decomp_top`: Substrate for ROM decomposition in the
+  topsoil
+- `em_CO2_ROM_top`: CO2 emissions from the decomposition of ROM in the
+  topsoil
+- `ROM_tr`: ROM transported from the topsoil to the subsoil
+- `ROM_sub`: ROM in the subsoil
+- `ROM_sub_decomposition`: Decomposition of ROM in the subsoil
+- `substrate_ROM_decomp_sub`: Substrate for ROM decomposition in the
+  subsoil
+- `em_CO2_ROM_sub`: CO2 emissions from the decomposition of ROM in the
+  subsoil
 
 ## Comparing multiple scenarios toy example
 
