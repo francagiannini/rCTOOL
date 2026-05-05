@@ -5,18 +5,37 @@
 \title{soil_pool_decomposition}
 \usage{
 soil_pool_decomposition(
-  soil_pool = c("FOM_top", "FOM_sub", "HUM_top", "HUM_sub", "ROM_top", "ROM_sub"),
+  soil_pool,
   k,
-  soil_depth = c(25, 100),
+  soil_depth,
   month,
   t_avg,
-  t_range,
+  amplitude,
   s_config
 )
 }
 \arguments{
-\item{s_config}{}
+\item{soil_pool}{Carbon amount in the soil pool.}
+
+\item{k}{First-order decomposition rate constant.}
+
+\item{soil_depth}{Soil layer thickness in cm. In the default C-TOOL
+configuration, the model operates with two fixed layers: topsoil
+(25 cm) and subsoil (100 cm).}
+
+\item{month}{Month index from 1 to 12.}
+
+\item{t_avg}{Monthly mean air temperature.}
+
+\item{amplitude}{Historical annual temperature amplitude previously
+calculate from the monthly temperature series.}
+
+\item{s_config}{Soil parameter configuration.}
+}
+\value{
+Carbon change in the pool due to temperature-modified
+first-order decomposition.
 }
 \description{
-soil_pool_decomposition
+Calculate temperature-modified decomposition of a soil carbon pool.
 }

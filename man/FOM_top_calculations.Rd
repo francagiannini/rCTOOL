@@ -8,21 +8,35 @@ FOM_top_calculations(
   FOM_top_t,
   month,
   t_avg = t_avg,
-  t_range = t_range,
+  amplitude = amplitude,
   s_config
 )
 }
 \arguments{
-\item{FOM_top_t}{}
+\item{FOM_top_t}{Numeric. Carbon content in FOM top pool (Mg C ha-1).}
 
-\item{month}{}
+\item{month}{Integer. Month index (1–12).}
 
-\item{t_avg}{}
+\item{t_avg}{Numeric. Monthly mean air temperature (°C).}
 
-\item{t_range}{}
+\item{amplitude}{Numeric. Annual historical temperature amplitude
+used in the soil temperature function.}
 
-\item{s_config}{}
+\item{s_config}{List. Soil configuration parameters.}
+}
+\value{
+A list with updated pool values and fluxes for FOM topsoil layer.
 }
 \description{
-FOM_top_calculations
+Calculate FOM decomposition and carbon fluxes in the topsoil layer.
+}
+\examples{
+FOM_top_calculations(
+  FOM_top_t = 10,
+  month = 7,
+  t_avg = 15,
+  amplitude = 10,
+  s_config = soil_config()
+)
+
 }

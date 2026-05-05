@@ -13,18 +13,29 @@ define_Cinputs(
 )
 }
 \arguments{
-\item{management_filepath}{filepath (or file!) for the management template (see export_management_template())}
+\item{management_filepath}{Either a filepath to a management template or
+a data.frame containing `Cin_top`, `Cin_sub` and `Cin_man`.}
 
-\item{Cin_top}{C input from residues on topsoil}
+\item{Cin_top}{Annual carbon input from plant residues in the topsoil.}
 
-\item{Cin_sub}{C input from residues on subsoil}
+\item{Cin_sub}{Annual carbon input from plant residues in the subsoil.}
 
-\item{Cin_man}{C input from manure}
+\item{Cin_man}{Annual carbon input from manure.}
 
-\item{time_config}{config of timeperiod}
-
-\item{df_Cin}{dataframe with the following cols: Cin_top (residues topsoil), Cin_sub (residues subsoil), Cin_man (Manure)}
+\item{time_config}{Time configuration object returned by `define_timeperiod()`}
+}
+\value{
+A list containing `Cin_top`, `Cin_sub` and `Cin_man`.
 }
 \description{
-explicits C inputs from plants and manure
+Prepare annual carbon input (from plants and/or manure) configuration.
+}
+\examples{
+time_config <- define_timeperiod(yr_start = 2006, yr_end = 2008)
+define_Cinputs(
+  Cin_top = c(2, 2, 2),
+  Cin_sub = c(0.5, 0.5, 0.5),
+  Cin_man = c(1, 1, 1),
+  time_config = time_config
+)
 }

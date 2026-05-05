@@ -2,13 +2,22 @@
 % Please edit documentation in R/turnover_beta.R
 \name{turnover_beta}
 \alias{turnover_beta}
-\title{Turnover core function}
+\title{turnover_beta}
 \usage{
 turnover_beta(i)
 }
+\arguments{
+\item{i}{Integer index of the simulation timestep.}
+}
 \value{
-The arguments are:
+A one-row data.frame containing updated pool sizes, carbon stocks,
+  transport fluxes and CO2 emissions for the current timestep.
 }
 \description{
-Turnover core function
+Legacy monthly turnover routine retained for backward compatibility.
+}
+\details{
+This function updates FOM, HUM and ROM pools for one monthly timestep
+using the historical C-TOOL workflow. It relies on objects defined in the
+calling environment and is retained only for backward compatibility.
 }

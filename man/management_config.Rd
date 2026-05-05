@@ -10,28 +10,47 @@ management_config(
   grain_monthly_allocation = NULL,
   grass_monthly_allocation = NULL,
   manure_monthly_allocation = NULL,
-  f_man_humification = 0.192
+  f_man_humification = 0.12
 )
 }
 \arguments{
-\item{management_filepath}{filepath (or file!) for the management template (see export_management_template())}
+\item{management_filepath}{Either a filepath to a management template or
+a data.frame containing management allocation variables.}
 
-\item{plant_monthly_allocation}{monthly distribution of plant C inputs; default c(0,0,0,.08,.12,.16,.64,0,0,0,0,0)}
+\item{plant_monthly_allocation}{Monthly distribution of plant carbon inputs.}
 
-\item{grain_monthly_allocation}{monthly distribution of grain C input; default c(0,0,1,0,0,0,0,0,0,0,0,0)}
+\item{grain_monthly_allocation}{Monthly distribution of grain carbon inputs.}
 
-\item{grass_monthly_allocation}{monthly distribution of grass C input; default c(0,0,1,0,0,0,0,0,0,0,0,0)}
+\item{grass_monthly_allocation}{Monthly distribution of grass carbon inputs.}
 
-\item{manure_monthly_allocation}{monthly distribution of manure C input; default c(0,0,1,0,0,0,0,0,0,0,0,0)}
+\item{manure_monthly_allocation}{Monthly distribution of manure carbon inputs.}
 
-\item{f_man_humification}{fraction of manure already humidified; default 0.192}
+\item{f_man_humification}{Fraction of manure already humidified.}
+}
+\value{
+A list containing management allocation settings.
 }
 \description{
-prepares management configuration
-Can be used in two ways: from the management template (csv file exported using export_management_template()) or using fixed monthly values
-In the first approach the user can specify directly in the csv file the monthly allocation fractions - please note plant is used if there are no crop rotations or otherwise use grain and crop allocation fractions
-In the second approach, the user can specify, using a vector of length 12 the different allocations
+Prepares management configuration for monthly carbon input allocation.
+}
+\details{
+This function can be used in two ways:
+1. from a management template file or data.frame, such as one exported with
+   `export_management_template()`
+2. by directly providing fixed monthly allocation vectors of length 12.
+
+In the first approach, the user can specify monthly allocation fractions
+directly in the input file. When no crop rotation is considered,
+`plant_monthly_allocation` should be used. When crop rotation is considered,
+grain and grass allocation fractions can be specified separately.
+
+In the second approach, the user can directly provide monthly allocation
+vectors of length 12.
 }
 \examples{
-management_config(f_man_humification=0.192, plant_monthly_allocation=c(0,0,0,.08,.12,.16,.64,0,0,0,0,0), manure_monthly_allocation = c(0,0,1,0,0,0,0,0,0,0,0,0))
+management_config(
+f_man_humification=0.192,
+plant_monthly_allocation = c(0,0,0,.08,.12,.16,.64,0,0,0,0,0),
+ manure_monthly_allocation = c(0,0,1,0,0,0,0,0,0,0,0,0)
+ )
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Update_soil_pools.R
 \name{update_monthly_FOM_sub}
 \alias{update_monthly_FOM_sub}
-\title{updated_monthly_FOM_sub}
+\title{update_monthly_FOM_sub}
 \usage{
 update_monthly_FOM_sub(
   FOM_sub_t1,
@@ -13,8 +13,20 @@ update_monthly_FOM_sub(
 )
 }
 \arguments{
-\item{m_config}{}
+\item{FOM_sub_t1}{FOM content in the subsoil layer from the previous timestep.}
+
+\item{FOM_transport}{FOM transported from the topsoil.}
+
+\item{C_in_plant_sub}{Plant carbon input to the subsoil.}
+
+\item{month}{Month index from 1 to 12.}
+
+\item{m_config}{Management configuration list.}
+}
+\value{
+Updated FOM content in the subsoil layer after plant inputs and
+transport from the topsoil.
 }
 \description{
-updated_monthly_FOM_sub
+update_monthly_FOM_sub
 }

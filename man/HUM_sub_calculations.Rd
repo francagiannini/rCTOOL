@@ -4,17 +4,35 @@
 \alias{HUM_sub_calculations}
 \title{HUM_sub_calculations}
 \usage{
-HUM_sub_calculations(
-  HUM_sub_t,
-  month,
-  t_avg = t_avg,
-  t_range = t_range,
-  s_config
-)
+HUM_sub_calculations(HUM_sub_t, month, t_avg, amplitude, s_config)
 }
 \arguments{
-\item{s_config}{}
+\item{HUM_sub_t}{Numeric. Carbon content in the HUM subsoil pool
+(Mg C ha-1).}
+
+\item{month}{Integer. Month index (1-12).}
+
+\item{t_avg}{Numeric. Monthly mean air temperature (degrees C).}
+
+\item{amplitude}{Numeric. Annual historical temperature amplitude
+used in the soil temperature function.}
+
+\item{s_config}{List. Soil configuration parameters.}
+}
+\value{
+A list with updated HUM subsoil pool values and associated fluxes.
 }
 \description{
-HUM_sub_calculations
+Calculate HUM decomposition and carbon fluxes in the subsoil layer.
+}
+\examples{
+\dontrun{
+HUM_sub_calculations(
+  HUM_sub_t = 20,
+  month = 7,
+  t_avg = 15,
+  amplitude = 10,
+  s_config = soil_config()
+)
+}
 }

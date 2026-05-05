@@ -7,7 +7,15 @@
 update_monthly_HUM_sub(HUM_sub_t1, HUM_transport, FOM_humified_sub)
 }
 \arguments{
-\item{FOM_humified_sub}{}
+\item{HUM_sub_t1}{HUM content in the subsoil layer from the previous timestep.}
+
+\item{HUM_transport}{HUM transported from the topsoil.}
+
+\item{FOM_humified_sub}{Humified FOM added to the subsoil HUM pool.}
+}
+\value{
+Updated HUM content in the subsoil layer after transport and
+humified FOM additions.
 }
 \description{
 update_monthly_HUM_sub

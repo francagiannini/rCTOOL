@@ -7,7 +7,19 @@
 update_monthly_HUM_top(HUM_top_t1, C_in_man, FOM_humified_top, month, m_config)
 }
 \arguments{
-\item{m_config}{}
+\item{HUM_top_t1}{HUM content in the topsoil layer from the previous timestep.}
+
+\item{C_in_man}{Manure carbon input.}
+
+\item{FOM_humified_top}{Humified FOM added to the topsoil HUM pool.}
+
+\item{month}{Month index from 1 to 12.}
+
+\item{m_config}{Management configuration list.}
+}
+\value{
+Updated HUM content in the topsoil layer after manure inputs and
+humified FOM additions.
 }
 \description{
 update_monthly_HUM_top

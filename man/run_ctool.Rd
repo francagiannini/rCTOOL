@@ -11,12 +11,40 @@ run_ctool(
   t_config,
   s_config,
   soil_pools,
-  verbose = F
+  verbose = FALSE
 )
 }
 \arguments{
-\item{verbose}{logical; if TRUE, provide check balance (needs to be 0 or really close to it)}
+\item{time_config}{Time configuration object created by
+`define_timeperiod()`.}
+
+\item{cin_config}{Carbon input configuration.}
+
+\item{m_config}{Management configuration with monthly allocation patterns.}
+
+\item{t_config}{Monthly temperature configuration containing at least
+`month` and `Tavg`.}
+
+\item{s_config}{Soil parameter configuration.}
+
+\item{soil_pools}{Initial soil pool configuration.}
+
+\item{verbose}{Logical; if `TRUE`, run balance checking.}
+}
+\value{
+A data.frame containing the monthly simulation output across the
+  full simulation period.
 }
 \description{
-run_ctool
+Run C-TOOL over the full simulation period.
+}
+\details{
+Iteratively applies `turnover()` over all timesteps defined in
+`time_config` and returns monthly carbon pool sizes, soil carbon stocks,
+transport fluxes and CO2 emissions.
+
+The temperature configuration must provide monthly mean air temperature.
+A single historical annual temperature amplitude is calculated internally
+from the monthly climatology of `Tavg` and is used in the soil temperature
+response function.
 }

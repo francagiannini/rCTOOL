@@ -19,49 +19,76 @@ soil_config(
   k_fom = 0.12,
   k_hum = 0.0028,
   k_rom = 3.85e-05,
-  ftr = 0.0025
+  ftr = 0.0025,
+  temp_method = "rctool",
+  temp_amplitude_hist = NA_real_,
+  temp_offset = 0,
+  temp_th_diff = 3.5e-07
 )
 }
 \arguments{
-\item{Csoil_init}{initial C stock at depth 1m (t/ha)}
+\item{Csoil_init}{Initial carbon stock at depth 1m (Mg C ha-1).}
 
-\item{f_hum_top}{initial hum fraction top layer}
+\item{f_hum_top}{Initial HUM fraction in the topsoil layer.}
 
-\item{f_rom_top}{initial rom fraction top layer}
+\item{f_rom_top}{Initial ROM fraction in the topsoil layer.}
 
-\item{f_hum_sub}{initial hum fraction bottom layer}
+\item{f_hum_sub}{Initial HUM fraction in the bottom layer.}
 
-\item{f_rom_sub}{initial rom fraction bottom layer}
+\item{f_rom_sub}{initial ROM fraction in the bottom layer.}
 
-\item{Cproptop}{Proportion of the total C allocated in topsoil}
+\item{Cproptop}{Proportion of the total carbon allocated to the topsoil.}
 
-\item{clay_top}{clay fraction top soil}
+\item{clay_top}{Clay fraction in the top soil.}
 
-\item{clay_sub}{clay fraction subsoil}
+\item{clay_sub}{Clay fraction in the subsoil.}
 
-\item{phi}{Diffusion index}
+\item{phi}{Legacy diffusion parameter used in the original rCTOOL
+temperature formulation.}
 
-\item{f_co2}{respiration fraction}
+\item{f_co2}{Respiration fraction.}
 
-\item{f_romi}{romification fraction}
+\item{f_romi}{Romification fraction.}
 
-\item{k_fom}{fom decomposition rate}
+\item{k_fom}{FOM decomposition rate constant.}
 
-\item{k_hum}{hum decomposition rate}
+\item{k_hum}{HUM decomposition rate constant.}
 
-\item{k_rom}{rom decomposition rate}
+\item{k_rom}{ROM decomposition rate constant.}
 
-\item{ftr}{transport rate}
+\item{ftr}{Vertical transport rate.}
 
-\item{ini_Cin_top}{initial C inputs topsoil}
+\item{temp_method}{Temperature method identifier.}
 
-\item{ini_Cin_sub}{initial C inputs subsoil}
+\item{temp_amplitude_hist}{Optional historical annual amplitude to be used
+in the soil temperature calculation.}
+
+\item{temp_offset}{Phase offset used in the soil temperature calculation.}
+
+\item{temp_th_diff}{Thermal diffusivity used in the physical soil
+temperature formulation.}
+}
+\value{
+A list containing soil configuration parameters.
 }
 \description{
-sets soil configuration parameters
+Prepare soil configuration parameters.
+}
+\details{
+Exports a template that can be used to provide management inputs for the model.
+The exported file includes monthly allocation variables and carbon input
+columns initialized with zeros, so they can be filled by the user before
+being read by the model.
+
+Users should keep only the columns relevant to their workflow and avoid
+double accounting among allocation variables. For example, when
+`plant_monthly_allocation` is used, grain and grass allocation columns
+should not be used simultaneously.
+
+If monthly carbon inputs are provided directly, additional allocation
+columns may not be needed. These consistency checks are not enforced
+automatically and must be handled by the user when preparing the input file.
 }
 \examples{
-soil_config(Csoil_init=72, f_hum_top=0.5)
-soil_config()
-soil_config(Csoil_init=72, f_hum_top=0.5, clay_sub = 0.35, clay_top=0.25, Cproptop=0.6)
+soil_config(Csoil_init=72, f_hum_top=0.5, clay_sub = 0.35, clay_top=0.25)
 }

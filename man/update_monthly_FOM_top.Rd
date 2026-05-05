@@ -2,13 +2,24 @@
 % Please edit documentation in R/Update_soil_pools.R
 \name{update_monthly_FOM_top}
 \alias{update_monthly_FOM_top}
-\title{update_FOM_top}
+\title{update_monthly_FOM_top}
 \usage{
 update_monthly_FOM_top(FOM_top_t1, Cin_plant_top, Cin_manure, month, m_config)
 }
 \arguments{
-\item{m_config}{management configuration list}
+\item{FOM_top_t1}{FOM content in the topsoil layer from the previous timestep.}
+
+\item{Cin_plant_top}{Plant carbon input to the topsoil.}
+
+\item{Cin_manure}{Manure carbon input.}
+
+\item{month}{Month index from 1 to 12.}
+
+\item{m_config}{Management configuration list.}
+}
+\value{
+Updated FOM content in the topsoil layer after monthly carbon inputs.
 }
 \description{
-update_FOM_top
+update_monthly_FOM_top
 }

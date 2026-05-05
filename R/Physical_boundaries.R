@@ -1,67 +1,75 @@
 
 #' define_physical_boundaries
 #'
+#' Check whether a parameter value lies within specified physical bounds.
+#'
 #' @param value parameter value
-#' @param min_limit min limit (usually 0)
-#' @param max_limit max limit
+#' @param min_limit Minimum allowed value.
+#' @param max_limit Maximum allowed value.
 #'
-#' @description
-#' establishes minimum and physical boundaries for parameters
 #'
-#' @return
+#' @return The input value if it lies within the specified physical bounds.
 #' @export
 #'
 #' @examples define_physical_boundaries(0.3, 0, 1)
-define_physical_boundaries = function(value, min_limit, max_limit) {
+define_physical_boundaries <- function(value, min_limit, max_limit) {
 
-  if (value<min_limit) { stop('Please ensure the parameter is above the min limit.') }
-  if (value>max_limit) { stop('Please ensure the parameter is below the max limit.') }
+  if (min_limit > max_limit) {
+    stop("'min_limit' must be smaller than or equal to 'max_limit'.")
+  }
+
+  if (value < min_limit) {
+    stop("Please ensure the parameter is above the minimum limit.")
+  }
+
+  if (value > max_limit) {
+    stop("Please ensure the parameter is below the maximum limit.")
+  }
+
   value
 }
 
 #' check_balance
 #'
-#' @param ctool_output output from turnover model
-#' @param cin_config carbon input config
-#' @param s_config soil config
+#'Check carbon balance consistency of a  simulation.
 #'
-#' @description
-#' calculates mass balance for the simulation
-#' Includes initial c soil, sum of inputs, SOC stocks and CO2 emissions
-#' needs to be 0 or really close to 0
-#' used in run_ctool (ctool.R)
+#' Computes the balance between initial soil carbon, cumulative carbon inputs,
+#' final carbon stocks and cumulative CO2 emissions. The balance should be
+#' zero or very close to zero.
 #'
-#' @return
+#' @param ctool_output Output from turnover model.
+#' @param cin_config Carbon input configuration.
+#' @param s_config Soil configuration.
+#'
+#' @return The input `ctool_output` data.frame, returned unchanged after
+#' checking carbon balance consistency.
 #'
 #' @export
-#'
-#' @examples
-check_balance = function(ctool_output,
+
+check_balance <- function(ctool_output,
                          cin_config,
                          s_config) {
-  #TODO: if C inputs are given in a monthly dataframe, dont sum all vector, need to account for monthly allocation!
+  # TODO: if C inputs are given in a monthly data frame, do not sum the full vector directly;
+  # monthly allocation must be accounted for.
 
-  initial = s_config$Csoil_init
-  inputs = sum(cin_config$Cin_top) + sum(cin_config$Cin_sub) + sum(cin_config$Cin_man)
-  stocks = ctool_output$C_topsoil[nrow(ctool_output)] + ctool_output$C_subsoil[nrow(ctool_output)]
-  emissions = sum(ctool_output$em_CO2_top) + sum(ctool_output$em_CO2_sub)
+  initial <- s_config$Csoil_init
 
-  balance = initial + inputs - stocks - emissions
+  inputs <- sum(cin_config$Cin_top) +
+    sum(cin_config$Cin_sub) +
+    sum(cin_config$Cin_man)
 
-  if (balance != 0) {
-    if (abs(balance)<0.001) {
-      return(ctool_output)
-    }
-    else {
-      print('Check balance does not added up; please check this')
-      print(paste0('Balance is ', balance))
-      return(ctool_output)
-    }
-  }
-  else {
-    return(ctool_output)
-  }
+  stocks <- ctool_output$C_topsoil[nrow(ctool_output)] +
+    ctool_output$C_subsoil[nrow(ctool_output)]
+
+  emissions <- sum(ctool_output$em_CO2_top) +
+    sum(ctool_output$em_CO2_sub)
+
+  balance <- initial + inputs - stocks - emissions
+
+     if (abs(balance) >= 0.001) {
+       warning("Carbon balance does not close. Balance error = ",
+              signif(balance, 6))
+     }
+
+      ctool_output
 }
-
-
-

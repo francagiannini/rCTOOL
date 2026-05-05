@@ -4,8 +4,8 @@
 \name{rCTOOL-package}
 \alias{rCTOOL}
 \alias{rCTOOL-package}
-\title{rCTOOL: An open and comprehensive R package for C turnover modelling}
+\title{rCTOOL package}
 \description{
-rCTOOL is an open-source R package, that encapsulates the capabilities of C-TOOL while addressing its implementation limitations. The aim consists of providing a user-friendly interface, facilitates running multiple scenarios, and offers comprehensive documentation and licensing information. This package streamlines the use of C-TOOL, making it more accessible and effective for potential users.
+Provides an R interface to the C-TOOL soil carbon turnover model for simulating soil organic carbon dynamics in agricultural systems. The package supports the definition of carbon inputs, management schedules, soil parameters, and temperature forcing, and includes tools for scenario analysis and calibration of selected model parameters against observed soil organic carbon stocks.
 }
 \keyword{internal}

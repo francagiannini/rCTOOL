@@ -4,25 +4,35 @@
 \alias{ROM_top_calculations}
 \title{ROM_top_calculations}
 \usage{
-ROM_top_calculations(
-  ROM_top_t,
-  month,
-  t_avg = t_avg,
-  t_range = t_range,
-  s_config
-)
+ROM_top_calculations(ROM_top_t, month, t_avg, amplitude, s_config)
 }
 \arguments{
-\item{ROM_top_t}{}
+\item{ROM_top_t}{Numeric. Carbon content in the ROM topsoil pool
+(Mg C ha-1).}
 
-\item{month}{}
+\item{month}{Integer. Month index (1-12).}
 
-\item{t_avg}{}
+\item{t_avg}{Numeric. Monthly mean air temperature (degrees C).}
 
-\item{t_range}{}
+\item{amplitude}{Numeric. Annual historical temperature amplitude
+used in the soil temperature function.}
 
-\item{s_config}{}
+\item{s_config}{List. Soil configuration parameters.}
+}
+\value{
+A list with updated ROM topsoil pool values and associated fluxes.
 }
 \description{
-ROM_top_calculations
+Calculate ROM decomposition and carbon fluxes in the topsoil layer.
+}
+\examples{
+\dontrun{
+ROM_top_calculations(
+  ROM_top_t = 10,
+  month = 7,
+  t_avg = 15,
+  amplitude = 10,
+  s_config = soil_config()
+)
+}
 }

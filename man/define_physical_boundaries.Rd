@@ -9,12 +9,15 @@ define_physical_boundaries(value, min_limit, max_limit)
 \arguments{
 \item{value}{parameter value}
 
-\item{min_limit}{min limit (usually 0)}
+\item{min_limit}{Minimum allowed value.}
 
-\item{max_limit}{max limit}
+\item{max_limit}{Maximum allowed value.}
+}
+\value{
+The input value if it lies within the specified physical bounds.
 }
 \description{
-establishes minimum and physical boundaries for parameters
+Check whether a parameter value lies within specified physical bounds.
 }
 \examples{
 define_physical_boundaries(0.3, 0, 1)

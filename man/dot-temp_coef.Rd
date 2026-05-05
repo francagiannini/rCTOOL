@@ -7,8 +7,11 @@
 .temp_coef(T_zt)
 }
 \arguments{
-\item{T_zt}{}
+\item{T_zt}{Soil temperature at depth z and time t.}
+}
+\value{
+Temperature response coefficient for carbon decomposition.
 }
 \description{
-.temp_coef
+Calculate the temperature response coefficient for carbon decomposition.
 }

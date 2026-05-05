@@ -4,11 +4,46 @@
 \alias{turnover}
 \title{turnover}
 \usage{
-turnover(timestep, time_config, cin_config, m_config, t_config, s_config, out)
+turnover(
+  timestep,
+  time_config,
+  cin_config,
+  m_config,
+  t_config,
+  s_config,
+  out,
+  amplitude_hist
+)
 }
 \arguments{
-\item{out}{}
+\item{timestep}{Integer index of the simulation timestep.}
+
+\item{time_config}{Time configuration object created by
+`define_timeperiod()`.}
+
+\item{cin_config}{Carbon input configuration.}
+
+\item{m_config}{Management configuration with monthly allocation patterns.}
+
+\item{t_config}{Monthly temperature configuration containing at least
+`month` and `Tavg`.}
+
+\item{s_config}{Soil parameter configuration.}
+
+\item{out}{Data frame containing pool values from the previous timestep.}
+
+\item{amplitude_hist}{Numeric. Historical annual air temperature amplitude
+calculated from the monthly climatology of `Tavg`.}
+}
+\value{
+A data.frame containing updated monthly pool sizes, carbon stocks,
+  transport fluxes and CO2 emissions for the current timestep.
 }
 \description{
-turnover
+Perform one monthly turnover step of C-TOOL.
+}
+\details{
+Updates FOM, HUM and ROM pools for one monthly timestep using carbon
+inputs, management allocations, monthly mean air temperature, soil
+parameters, and the previous pool state.
 }

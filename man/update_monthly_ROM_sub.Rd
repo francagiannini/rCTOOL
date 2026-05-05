@@ -7,7 +7,15 @@
 update_monthly_ROM_sub(ROM_sub_t1, HUM_romified_sub, ROM_transport)
 }
 \arguments{
-\item{ROM_transport}{}
+\item{ROM_sub_t1}{ROM content in the subsoil layer from the previous timestep.}
+
+\item{HUM_romified_sub}{Romified HUM added to the subsoil ROM pool.}
+
+\item{ROM_transport}{ROM transported from the topsoil.}
+}
+\value{
+Updated ROM content in the subsoil layer after romified HUM additions
+and transport from the topsoil.
 }
 \description{
 update_monthly_ROM_sub

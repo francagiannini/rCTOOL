@@ -7,15 +7,21 @@
 check_balance(ctool_output, cin_config, s_config)
 }
 \arguments{
-\item{ctool_output}{output from turnover model}
+\item{ctool_output}{Output from turnover model.}
 
-\item{cin_config}{carbon input config}
+\item{cin_config}{Carbon input configuration.}
 
-\item{s_config}{soil config}
+\item{s_config}{Soil configuration.}
+}
+\value{
+The input `ctool_output` data.frame, returned unchanged after
+checking carbon balance consistency.
 }
 \description{
-calculates mass balance for the simulation
-Includes initial c soil, sum of inputs, SOC stocks and CO2 emissions
-needs to be 0 or really close to 0
-used in run_ctool (ctool.R)
+Check carbon balance consistency of a  simulation.
+}
+\details{
+Computes the balance between initial soil carbon, cumulative carbon inputs,
+final carbon stocks and cumulative CO2 emissions. The balance should be
+zero or very close to zero.
 }

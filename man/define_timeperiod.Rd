@@ -7,16 +7,18 @@
 define_timeperiod(yr_start, yr_end)
 }
 \arguments{
-\item{yr_start}{initial simulation year}
+\item{yr_start}{Initial simulation year.}
 
-\item{yr_end}{end simulation year}
+\item{yr_end}{Final nd simulation year.}
 }
 \value{
-list with 2 indexes; index 1 is a dataframe teplate (cols month, yr and annual timestep) and index 2 is the number of months
+A list with two elements: `timeperiod`, a data.frame containing
+monthly timesteps, years and annual timestep identifiers; and `steps`,
+the total number of simulated months.
 }
 \description{
-creates a dataframe template with the months, yrs and annual timesteps
+Create the monthly simulation time structure.
 }
 \examples{
-define_timeperiod(yr_start=2006, yr_end=2010)
+ define_timeperiod(yr_start=2006, yr_end=2010)
 }

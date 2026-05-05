@@ -1,178 +1,178 @@
 #' .clean_monthly_allocations
 #'
-#' @param m_config management config
+#' Clean and harmonize monthly allocation inputs.
 #'
-#'  @description
-#'  Reads management config with monthly allocations (plant, grain/grass)
-#'  Depending on the user specifications, adapts the management config:
-#'  (i) if user specifies plant, grain and grass allocations, recalculate plant allocation (sum of grain and grass)
-#'  (ii) if only one allocation is given, see whether it is plant (no crop rotation), provides user with a confirmation message
-#'  (iii) if two allocation are given, confirm these match crop rotation (grass/grain), otherwise stop
+#' Reads management configuration with monthly allocation vectors and
+#' returns a configuration containing `plant_monthly_allocation`.
 #'
-#' @return
-#' Returns only plant monthly allocation irrespective of user input; this will be read with fucntions bellow
+#' Depending on the user input:
+#' - if plant, grain and grass allocations are all provided, plant
+#'   allocation is recalculated as grain plus grass
+#' - if only one allocation is provided, it is treated as plant allocation
+#' - if two allocations are provided, they must correspond to grain and
+#'   grass; otherwise an error is returned
 #'
-#' @examples
-.clean_monthly_allocations = function(m_config) {
+#' @param m_config Management configuration list.
+#'
+#' @return A management configuration list containing
+#'   `plant_monthly_allocation`.
+.clean_monthly_allocations <- function(m_config) {
 
-  allocation_params = c('plant_monthly_allocation','grain_monthly_allocation','grass_monthly_allocation')
+  allocation_params <- c(
+    "plant_monthly_allocation",
+    "grain_monthly_allocation",
+    "grass_monthly_allocation"
+  )
 
-  # remove empty indexes
-  m_config = m_config[lapply(m_config,length)>0]
+  m_config <- m_config[lapply(m_config, length) > 0]
+  idx_name <- names(m_config)
 
-  # store index names
-  idx_name = names(m_config)
-
-  # set conditions
-  len_cond = length(which(allocation_params %in% idx_name))
+  len_cond <- length(which(allocation_params %in% idx_name))
 
   if (len_cond == 3) {
-    # if len == 3, add grain and grass monthly allocation
-    m_config$plant_monthly_allocation = m_config$grain_monthly_allocation + m_config$grass_monthly_allocation
-    m_config$grain_monthly_allocation = NULL; m_config$grass_monthly_allocation = NULL
-  }
-  else if (len_cond == 1) {
-    # if len == 1, set that to plant allocation; if different than plant, provide message confirming highlighting input data given
-    selected_param = allocation_params[which(c(allocation_params %in% idx_name))]
-    if (selected_param != 'plant_monthly_allocation') {
-      menu(c('Yes','No'), title='You selected a possible crop rotation yet only chose one out of two. This is going to be assumed as plant allocation.\nDo you want this?')
-    }
-    m_config$plant_monthly_allocation = m_config[[selected_param]]
-  }
-  else if (len_cond == 2) {
-    # if len == 2, check if it is grain and grass, if it is, add those fractions, otherwise stop
-    selected_params = allocation_params[which(c(allocation_params %in% idx_name))]
+    m_config$plant_monthly_allocation <-
+      m_config$grain_monthly_allocation + m_config$grass_monthly_allocation
+    m_config$grain_monthly_allocation <- NULL
+    m_config$grass_monthly_allocation <- NULL
+  } else if (len_cond == 1) {
+    selected_param <- allocation_params[allocation_params %in% idx_name]
 
-    if (length(which('grain_monthly_allocation','grass_monthly_allocation' %in% selected_params))==2) {
-      m_config$plant_monthly_allocation = m_config$grain_monthly_allocation + m_config$grass_monthly_allocation
-      m_config$grain_monthly_allocation = NULL; m_config$grass_monthly_allocation = NULL
+    if (selected_param != "plant_monthly_allocation") {
+      warning(
+        "Only one allocation vector was provided and it was not ",
+        "'plant_monthly_allocation'. This input is being treated as ",
+        "plant allocation."
+      )
     }
-    else {
-      stop('You specified a crop rotation, please either select grain and grass allocation OR plant allocation if you no rotation is given')
+
+    m_config$plant_monthly_allocation <- m_config[[selected_param]]
+  } else if (len_cond == 2) {
+    selected_params <- allocation_params[allocation_params %in% idx_name]
+
+    if (all(c("grain_monthly_allocation", "grass_monthly_allocation") %in% selected_params)) {
+      m_config$plant_monthly_allocation <-
+        m_config$grain_monthly_allocation + m_config$grass_monthly_allocation
+      m_config$grain_monthly_allocation <- NULL
+      m_config$grass_monthly_allocation <- NULL
+    } else {
+      stop(
+        "You specified two allocation vectors, but these do not match a ",
+        "grain/grass rotation. Please provide either 'plant_monthly_allocation' ",
+        "or both 'grain_monthly_allocation' and 'grass_monthly_allocation'."
+      )
     }
   }
-  return(m_config)
+
+  m_config
 }
 
-#' update_FOM_top
+#' update_monthly_FOM_top
 #'
-#' @param FOM_top_t1
-#' @param Cin_plant
-#' @param Cin_manure
-#' @param month
-#' @param m_config management configuration list
+#' @param FOM_top_t1 FOM content in the topsoil layer from the previous timestep.
+#' @param Cin_plant_top Plant carbon input to the topsoil.
+#' @param Cin_manure Manure carbon input.
+#' @param month Month index from 1 to 12.
+#' @param m_config Management configuration list.
 #'
-#' @return
+#' @return Updated FOM content in the topsoil layer after monthly carbon inputs.
 #' @export
-#'
-#' @examples
-update_monthly_FOM_top = function(FOM_top_t1,
-                                  Cin_plant_top,
-                                  Cin_manure,
-                                  month,
-                                  m_config) {
+update_monthly_FOM_top <- function(FOM_top_t1,
+                                   Cin_plant_top,
+                                   Cin_manure,
+                                   month,
+                                   m_config) {
 
-
-
-  return(
-    FOM_top_t1 +
-      Cin_plant_top * m_config[['plant_monthly_allocation']][month] +
-      Cin_manure * (1-m_config[['f_man_humification']])*m_config[['manure_monthly_allocation']][month]
-  )
+  FOM_top_t1 +
+    Cin_plant_top * m_config[["plant_monthly_allocation"]][month] +
+    Cin_manure * (1 - m_config[["f_man_humification"]]) *
+    m_config[["manure_monthly_allocation"]][month]
 }
 
-#' updated_monthly_FOM_sub
+#' update_monthly_FOM_sub
 #'
-#' @param FOM_sub_t1
-#' @param FOM_transport
-#' @param C_in_plant_sub
-#' @param month
-#' @param m_config
+#' @param FOM_sub_t1 FOM content in the subsoil layer from the previous timestep.
+#' @param FOM_transport FOM transported from the topsoil.
+#' @param C_in_plant_sub Plant carbon input to the subsoil.
+#' @param month Month index from 1 to 12.
+#' @param m_config Management configuration list.
 #'
-#' @return
+#' @return Updated FOM content in the subsoil layer after plant inputs and
+#' transport from the topsoil.
 #' @export
-#'
-#' @examples
-update_monthly_FOM_sub = function(FOM_sub_t1,
-                                  FOM_transport,
-                                  C_in_plant_sub,
-                                  month,
-                                  m_config) {
+update_monthly_FOM_sub <- function(FOM_sub_t1,
+                                   FOM_transport,
+                                   C_in_plant_sub,
+                                   month,
+                                   m_config) {
 
-  return(FOM_sub_t1 + FOM_transport +
-           C_in_plant_sub * m_config[['plant_monthly_allocation']][month])
+  FOM_sub_t1 + FOM_transport +
+    C_in_plant_sub * m_config[["plant_monthly_allocation"]][month]
 }
 
 #' update_monthly_HUM_top
 #'
-#' @param HUM_top_t1
-#' @param C_in_man
-#' @param FOM_humified_top
-#' @param month
-#' @param m_config
+#' @param HUM_top_t1 HUM content in the topsoil layer from the previous timestep.
+#' @param C_in_man Manure carbon input.
+#' @param FOM_humified_top Humified FOM added to the topsoil HUM pool.
+#' @param month Month index from 1 to 12.
+#' @param m_config Management configuration list.
 #'
-#' @return
+#' @return Updated HUM content in the topsoil layer after manure inputs and
+#' humified FOM additions.
 #' @export
-#'
-#' @examples
-update_monthly_HUM_top = function(HUM_top_t1,
-                                  C_in_man,
-                                  FOM_humified_top,
-                                  month,
-                                  m_config) {
+update_monthly_HUM_top <- function(HUM_top_t1,
+                                   C_in_man,
+                                   FOM_humified_top,
+                                   month,
+                                   m_config) {
 
-  return(HUM_top_t1 +
-           FOM_humified_top +
-           C_in_man * m_config[['f_man_humification']] * m_config[['manure_monthly_allocation']][month])
+  HUM_top_t1 +
+    FOM_humified_top +
+    C_in_man * m_config[["f_man_humification"]] *
+    m_config[["manure_monthly_allocation"]][month]
 }
 
 #' update_monthly_HUM_sub
 #'
-#' @param HUM_sub_t1
-#' @param HUM_transport
-#' @param FOM_humified_sub
+#' @param HUM_sub_t1 HUM content in the subsoil layer from the previous timestep.
+#' @param HUM_transport HUM transported from the topsoil.
+#' @param FOM_humified_sub Humified FOM added to the subsoil HUM pool.
 #'
-#' @return
+#' @return Updated HUM content in the subsoil layer after transport and
+#' humified FOM additions.
 #' @export
-#'
-#' @examples
-update_monthly_HUM_sub = function(HUM_sub_t1,
-                                  HUM_transport,
-                                  FOM_humified_sub) {
+update_monthly_HUM_sub <- function(HUM_sub_t1,
+                                   HUM_transport,
+                                   FOM_humified_sub) {
 
-  return(HUM_sub_t1 + HUM_transport + FOM_humified_sub)
+  HUM_sub_t1 + HUM_transport + FOM_humified_sub
 }
 
 #' update_monthly_ROM_top
 #'
-#' @param ROM_top_t1
-#' @param HUM_romified_top
+#' @param ROM_top_t1 ROM content in the topsoil layer from the previous timestep.
+#' @param HUM_romified_top Romified HUM added to the topsoil ROM pool.
 #'
-#' @return
+#' @return Updated ROM content in the topsoil layer after romified HUM additions.
 #' @export
-#'
-#' @examples
-update_monthly_ROM_top = function(ROM_top_t1,
-                                  HUM_romified_top) {
+update_monthly_ROM_top <- function(ROM_top_t1,
+                                   HUM_romified_top) {
 
-  return(ROM_top_t1 + HUM_romified_top)
+  ROM_top_t1 + HUM_romified_top
 }
 
 #' update_monthly_ROM_sub
 #'
-#' @param ROM_sub_t1
-#' @param HUM_romified_sub
-#' @param ROM_transport
+#' @param ROM_sub_t1 ROM content in the subsoil layer from the previous timestep.
+#' @param HUM_romified_sub Romified HUM added to the subsoil ROM pool.
+#' @param ROM_transport ROM transported from the topsoil.
 #'
-#' @return
+#' @return Updated ROM content in the subsoil layer after romified HUM additions
+#' and transport from the topsoil.
 #' @export
-#'
-#' @examples
-update_monthly_ROM_sub = function(ROM_sub_t1,
-                                  HUM_romified_sub,
-                                  ROM_transport) {
+update_monthly_ROM_sub <- function(ROM_sub_t1,
+                                   HUM_romified_sub,
+                                   ROM_transport) {
 
-  return(ROM_sub_t1 + HUM_romified_sub + ROM_transport)
+  ROM_sub_t1 + HUM_romified_sub + ROM_transport
 }
-
-

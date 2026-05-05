@@ -7,18 +7,23 @@
 .clean_monthly_allocations(m_config)
 }
 \arguments{
-\item{m_config}{management config
-
- @description
- Reads management config with monthly allocations (plant, grain/grass)
- Depending on the user specifications, adapts the management config:
- (i) if user specifies plant, grain and grass allocations, recalculate plant allocation (sum of grain and grass)
- (ii) if only one allocation is given, see whether it is plant (no crop rotation), provides user with a confirmation message
- (iii) if two allocation are given, confirm these match crop rotation (grass/grain), otherwise stop}
+\item{m_config}{Management configuration list.}
 }
 \value{
-Returns only plant monthly allocation irrespective of user input; this will be read with fucntions bellow
+A management configuration list containing
+  `plant_monthly_allocation`.
 }
 \description{
-.clean_monthly_allocations
+Clean and harmonize monthly allocation inputs.
+}
+\details{
+Reads management configuration with monthly allocation vectors and
+returns a configuration containing `plant_monthly_allocation`.
+
+Depending on the user input:
+- if plant, grain and grass allocations are all provided, plant
+  allocation is recalculated as grain plus grass
+- if only one allocation is provided, it is treated as plant allocation
+- if two allocations are provided, they must correspond to grain and
+  grass; otherwise an error is returned
 }

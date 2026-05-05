@@ -1,24 +1,27 @@
 #' define_timeperiod
 #'
-#' @param yr_start initial simulation year
-#' @param yr_end end simulation year
+#' Create the monthly simulation time structure.
 #'
-#' @description
-#' creates a dataframe template with the months, yrs and annual timesteps
+#' @param yr_start Initial simulation year.
+#' @param yr_end Final nd simulation year.
 #'
-#' @returns list with 2 indexes; index 1 is a dataframe teplate (cols month, yr and annual timestep) and index 2 is the number of months
+#'
+#' @returns A list with two elements: `timeperiod`, a data.frame containing
+#' monthly timesteps, years and annual timestep identifiers; and `steps`,
+#' the total number of simulated months.
 #' @export
 #'
-#' @examples define_timeperiod(yr_start=2006, yr_end=2010)
-define_timeperiod = function(yr_start,
+#' @examples
+#'  define_timeperiod(yr_start=2006, yr_end=2010)
+define_timeperiod  <- function(yr_start,
                              yr_end) {
-  timeperiod = expand.grid( mon=1:12,
+  timeperiod <- expand.grid( mon=1:12,
                             yrs=yr_start:yr_end)
   timeperiod$id = timeperiod$yrs-(yr_start-1)
 
-  return(list(
+  list(
     timeperiod = timeperiod,
-    steps = nrow(timeperiod))
+    steps = nrow(timeperiod)
   )
 }
 
@@ -26,104 +29,143 @@ define_timeperiod = function(yr_start,
 
 #' export_management_template
 #'
-#' @param yr_start initial simulation year
-#' @param yr_end end simulation year
-#' @param filepath filepath where management template is to be exported
+#' Exports a template that can be used to provide management inputs for the
+#' model. The exported file includes monthly allocation variables and carbon
+#' input columns initialized with zeros, so they can be filled by the user
+#' before being read by the model.
 #'
-#' @description
-#' if user wants to specify monthly (or annual) C inputs and allocation fraction, it can export a template later to be read by the model
-#' note that all relevant columns are exported as 0, to be later populated by the user
-#' user needs to deleted columns that are not being used
-#' please ensure no double accounting in columns, for instance, by populating "plant_monthly_allocation" the user should not distinguish grass nor grain crops
-#' Furthermore, if user provides monthly C inputs, there is no need to populate allocation columns
-#' these conditions are not provided in the code and must be manually done with commmon sense
+#' Users should keep only the columns relevant to their workflow and avoid
+#' double accounting among allocation variables. For example, when
+#' `plant_monthly_allocation` is used, grain and grass allocation columns
+#' should not be used simultaneously.
 #'
-#' @return
+#' If monthly carbon inputs are provided directly, additional allocation
+#' columns may not be needed. These consistency checks are not enforced
+#' automatically and must be handled by the user when preparing the input file.
+#'
+#' @param yr_start Initial simulation year.
+#' @param yr_end Final simulation year.
+#' @param filepath Filepath where management template will be exported.
+#'
+#' @return The exported template as a data.frame.
 #' @export
 #'
-#' @examples export_management_template(2006, 2010, './Management_config.csv')
-export_management_template = function(yr_start,
+#' @examples
+#' path <- tempfile(fileext = ".csv")
+#' export_management_template(2006, 2010, path)
+export_management_template <- function(yr_start,
                                       yr_end,
                                       filepath) {
 
-  df = define_timeperiod(yr_start, yr_end)$timeperiod
-  cols_add = c('plant_monthly_allocation','grain_monthly_allocation','grass_monthly_allocation','manure_monthly_allocation','Cin_top','Cin_sub','Cin_man')
-  df[, cols_add] = 0
-  write.csv(df, filepath, row.names = F)
+  df <- define_timeperiod(yr_start, yr_end)$timeperiod
+  cols_add <- c(
+    'plant_monthly_allocation',
+    'grain_monthly_allocation',
+    'grass_monthly_allocation',
+    'manure_monthly_allocation',
+    'Cin_top',
+    'Cin_sub',
+    'Cin_man')
+  df[, cols_add] <- 0
+  write.csv(df, filepath, row.names = FALSE)
 }
 
 #' define_Cinputs
 #'
-#' @param management_filepath filepath (or file!) for the management template (see export_management_template())
-#' @param df_Cin dataframe with the following cols: Cin_top (residues topsoil), Cin_sub (residues subsoil), Cin_man (Manure)
-#' @param Cin_top C input from residues on topsoil
-#' @param Cin_sub C input from residues on subsoil
-#' @param Cin_man C input from manure
-#' @param time_config config of timeperiod
+#' Prepare annual carbon input (from plants and/or manure) configuration.
 #'
-#' @description
-#' explicits C inputs from plants and manure
+#' @param management_filepath Either a filepath to a management template or
+#'   a data.frame containing `Cin_top`, `Cin_sub` and `Cin_man`.
+#' @param Cin_top Annual carbon input from plant residues in the topsoil.
+#' @param Cin_sub Annual carbon input from plant residues in the subsoil.
+#' @param Cin_man Annual carbon input from manure.
+#' @param time_config Time configuration object returned by `define_timeperiod()`
 #'
-#' @return
+#' @return A list containing `Cin_top`, `Cin_sub` and `Cin_man`.
 #' @export
 #'
 #' @examples
-define_Cinputs = function(management_filepath = NULL,
+#' time_config <- define_timeperiod(yr_start = 2006, yr_end = 2008)
+#' define_Cinputs(
+#'   Cin_top = c(2, 2, 2),
+#'   Cin_sub = c(0.5, 0.5, 0.5),
+#'   Cin_man = c(1, 1, 1),
+#'   time_config = time_config
+#' )
+
+define_Cinputs <- function(management_filepath = NULL,
                           Cin_top=NULL,
                           Cin_sub=NULL,
                           Cin_man=NULL,
                           time_config=NULL) {
 
 
-  if (missing(management_filepath)==F) {
+  if (!missing(management_filepath) && !is.null(management_filepath)) {
 
-    if (class(management_filepath)=='data.frame') {
-      df = management_filepath
+    if (is.data.frame(management_filepath)) {
+      df <- management_filepath
     }
     else {
-      df = read.csv(management_filepath)
+      df <- read.csv(management_filepath)
     }
 
-    if (length(which(names(df) %in% c('Cin_top','Cin_sub','Cin_man')))!=3) { stop('Ensure Cin_top, Cin_sub and Cin_man are populated!') }
-    return(list(
+    if (!all(c("Cin_top", "Cin_sub", "Cin_man") %in% names(df))) { stop('Ensure Cin_top, Cin_sub and Cin_man are provided.')
+      }
+    list(
       Cin_top = df$Cin_top,
       Cin_sub = df$Cin_sub,
       Cin_man = df$Cin_man
-    ))
-  }
-  else {
+    )
+  } else {
 
-    n = length(unique(time_config$timeperiod$yrs))
-    if (length(Cin_top) != n | length(Cin_sub) != n | length(Cin_man) != n) { stop('Number of C inputs must be equal to the number of simulated years') }
-    return(list(
+    n <- length(unique(time_config$timeperiod$yrs))
+
+    if (length(Cin_top) != n || length(Cin_sub) != n || length(Cin_man) != n) {
+      stop('Number of annual carbon inputs must be equal to the number of simulated years.') }
+
+    list(
       Cin_top = Cin_top,
       Cin_sub = Cin_sub,
       Cin_man = Cin_man
-    ))
+    )
   }
 }
 
 
 #' management_config
 #'
-#' @param management_filepath filepath (or file!) for the management template (see export_management_template())
-#' @param plant_monthly_allocation monthly distribution of plant C inputs; default c(0,0,0,.08,.12,.16,.64,0,0,0,0,0)
-#' @param grain_monthly_allocation monthly distribution of grain C input; default c(0,0,1,0,0,0,0,0,0,0,0,0)
-#' @param grass_monthly_allocation monthly distribution of grass C input; default c(0,0,1,0,0,0,0,0,0,0,0,0)
-#' @param manure_monthly_allocation monthly distribution of manure C input; default c(0,0,1,0,0,0,0,0,0,0,0,0)
-#' @param f_man_humification fraction of manure already humidified; default 0.192
+#' Prepares management configuration for monthly carbon input allocation.
 #'
-#' @description
-#' prepares management configuration
-#' Can be used in two ways: from the management template (csv file exported using export_management_template()) or using fixed monthly values
-#' In the first approach the user can specify directly in the csv file the monthly allocation fractions - please note plant is used if there are no crop rotations or otherwise use grain and crop allocation fractions
-#' In the second approach, the user can specify, using a vector of length 12 the different allocations
+#' This function can be used in two ways:
+#' 1. from a management template file or data.frame, such as one exported with
+#'    `export_management_template()`
+#' 2. by directly providing fixed monthly allocation vectors of length 12.
 #'
-#' @return
+#' In the first approach, the user can specify monthly allocation fractions
+#' directly in the input file. When no crop rotation is considered,
+#' `plant_monthly_allocation` should be used. When crop rotation is considered,
+#' grain and grass allocation fractions can be specified separately.
+#'
+#' In the second approach, the user can directly provide monthly allocation
+#' vectors of length 12.
+#'
+#' @param management_filepath Either a filepath to a management template or
+#'   a data.frame containing management allocation variables.
+#' @param plant_monthly_allocation Monthly distribution of plant carbon inputs.
+#' @param grain_monthly_allocation Monthly distribution of grain carbon inputs.
+#' @param grass_monthly_allocation Monthly distribution of grass carbon inputs.
+#' @param manure_monthly_allocation Monthly distribution of manure carbon inputs.
+#' @param f_man_humification Fraction of manure already humidified.
+#'
+#' @return A list containing management allocation settings.
 #' @export
 #'
-#' @examples management_config(f_man_humification=0.192, plant_monthly_allocation=c(0,0,0,.08,.12,.16,.64,0,0,0,0,0), manure_monthly_allocation = c(0,0,1,0,0,0,0,0,0,0,0,0))
-#' @examples management_config(management_filepath='./management_template.csv, f_man_humification=0.192)
+#' @examples management_config(
+#' f_man_humification=0.192,
+#' plant_monthly_allocation = c(0,0,0,.08,.12,.16,.64,0,0,0,0,0),
+#'  manure_monthly_allocation = c(0,0,1,0,0,0,0,0,0,0,0,0)
+#'  )
+
 management_config = function(management_filepath = NULL,
                              plant_monthly_allocation=NULL,
                              grain_monthly_allocation=NULL,
@@ -131,92 +173,104 @@ management_config = function(management_filepath = NULL,
                              manure_monthly_allocation=NULL,
                              f_man_humification=0.12) {
 
-  if (missing(management_filepath)==F) {
+  if (!missing(management_filepath) && !is.null(management_filepath)) {
 
-    if (class(management_filepath)=='data.frame') {
-      df = management_filepath
+    if (is.data.frame(management_filepath)) {
+      df <- management_filepath
+    } else {
+      df <- read.csv(management_filepath)
     }
-    else {
-      df = read.csv(management_filepath) # note: there is an unneeded overhead here (read.csv twice from management and Cin!)
-    }
-    # apply some conditions here if needed, these are not implement ad nauseam, needs common sense
-
-    return(list(
+   list(
       f_man_humification = f_man_humification,
       plant_monthly_allocation = df$plant_monthly_allocation,
       grain_monthly_allocation = df$grain_monthly_allocation,
       grass_monthly_allocation = df$grass_monthly_allocation,
       manure_monthly_allocation = df$manure_monthly_allocation
-    ))
-  }
-  else {
-    # if no management template is given, prepare vectorization
-    # note this is set to fixed monthly values
+    )
+  } else {
+
     if ( (missing(plant_monthly_allocation)==F & length(plant_monthly_allocation)!=12) |
          (missing(manure_monthly_allocation)==F & length(manure_monthly_allocation)!=12) |
          (missing(grain_monthly_allocation)==F & length(grain_monthly_allocation)!=12) |
          (missing(grass_monthly_allocation)==F & length(grass_monthly_allocation)!=12) ){
-      stop('Vector must be of length 12 (1 for each month).')
+      stop('Allocation vectors must have length 12 (one value for each month).')
     }
-    else {
-      return(list(
+    list(
         f_man_humification = f_man_humification,
         plant_monthly_allocation = plant_monthly_allocation,
         grain_monthly_allocation = grain_monthly_allocation,
         grass_monthly_allocation = grass_monthly_allocation,
         manure_monthly_allocation = manure_monthly_allocation
-      ))
-    }
-
+      )
   }
 }
 
 #' soil_config
 #'
-#' @param Csoil_init initial C stock at depth 1m (t/ha)
-#' @param f_hum_top initial hum fraction top layer
-#' @param f_rom_top initial rom fraction top layer
-#' @param f_hum_sub initial hum fraction bottom layer
-#' @param f_rom_sub initial rom fraction bottom layer
-#' @param Cproptop Proportion of the total C allocated in topsoil
-#' @param clay_top clay fraction top soil
-#' @param clay_sub clay fraction subsoil
-#' @param phi Diffusion index
-#' @param f_co2 respiration fraction
-#' @param f_romi romification fraction
-#' @param k_fom fom decomposition rate
-#' @param k_hum hum decomposition rate
-#' @param k_rom rom decomposition rate
-#' @param ftr transport rate
-#' @param ini_Cin_top initial C inputs topsoil
-#' @param ini_Cin_sub initial C inputs subsoil
+#' Prepare soil configuration parameters.
 #'
-#' @description
-#'  sets soil configuration parameters
+#' Exports a template that can be used to provide management inputs for the model.
+#' The exported file includes monthly allocation variables and carbon input
+#' columns initialized with zeros, so they can be filled by the user before
+#' being read by the model.
 #'
-#' @return
+#' Users should keep only the columns relevant to their workflow and avoid
+#' double accounting among allocation variables. For example, when
+#' `plant_monthly_allocation` is used, grain and grass allocation columns
+#' should not be used simultaneously.
+#'
+#' If monthly carbon inputs are provided directly, additional allocation
+#' columns may not be needed. These consistency checks are not enforced
+#' automatically and must be handled by the user when preparing the input file.
+#'
+#' @param Csoil_init Initial carbon stock at depth 1m (Mg C ha-1).
+#' @param f_hum_top Initial HUM fraction in the topsoil layer.
+#' @param f_rom_top Initial ROM fraction in the topsoil layer.
+#' @param f_hum_sub Initial HUM fraction in the bottom layer.
+#' @param f_rom_sub initial ROM fraction in the bottom layer.
+#' @param Cproptop Proportion of the total carbon allocated to the topsoil.
+#' @param clay_top Clay fraction in the top soil.
+#' @param clay_sub Clay fraction in the subsoil.
+#' @param phi Legacy diffusion parameter used in the original rCTOOL
+#' temperature formulation.
+#' @param f_co2 Respiration fraction.
+#' @param f_romi Romification fraction.
+#' @param k_fom FOM decomposition rate constant.
+#' @param k_hum HUM decomposition rate constant.
+#' @param k_rom ROM decomposition rate constant.
+#' @param ftr Vertical transport rate.
+#' @param temp_method Temperature method identifier.
+#' @param temp_amplitude_hist Optional historical annual amplitude to be used
+#'   in the soil temperature calculation.
+#' @param temp_offset Phase offset used in the soil temperature calculation.
+#' @param temp_th_diff Thermal diffusivity used in the physical soil
+#'   temperature formulation.
+#'
+#' @return A list containing soil configuration parameters.
 #' @export
 #'
-#' @examples soil_config(Csoil_init=72, f_hum_top=0.5)
-#' @examples soil_config()
-#' @examples soil_config(Csoil_init=72, f_hum_top=0.5, clay_sub = 0.35, clay_top=0.25, Cproptop=0.6)
-soil_config = function(Csoil_init = 70.4,
-                       f_hum_top = 0.48,
-                       f_rom_top = 0.49,
-                       f_hum_sub = 0.312,
-                       f_rom_sub = 0.6847,
-                       Cproptop = 0.47,
-                       clay_top = 0.1,
-                       clay_sub = 0.15,
-                       phi = 0.035,
-                       f_co2 = 0.628,
-                       f_romi = 0.012,
-                       k_fom  = 0.12,
-                       k_hum = 0.0028,
-                       k_rom = 3.85e-5,
-                       ftr = 0.0025) {
+#' @examples soil_config(Csoil_init=72, f_hum_top=0.5, clay_sub = 0.35, clay_top=0.25)
+soil_config <- function(Csoil_init = 70.4,
+                        f_hum_top = 0.48,
+                        f_rom_top = 0.49,
+                        f_hum_sub = 0.312,
+                        f_rom_sub = 0.6847,
+                        Cproptop = 0.47,
+                        clay_top = 0.1,
+                        clay_sub = 0.15,
+                        phi = 0.035,
+                        f_co2 = 0.628,
+                        f_romi = 0.012,
+                        k_fom = 0.12,
+                        k_hum = 0.0028,
+                        k_rom = 3.85e-05,
+                        ftr = 0.0025,
+                        temp_method = "rctool",
+                        temp_amplitude_hist = NA_real_,
+                        temp_offset = 0,
+                        temp_th_diff = 0.35e-6) {
 
-  return(list(
+ list(
     Csoil_init = Csoil_init,
     f_hum_top = f_hum_top,
     f_rom_top = f_rom_top,
@@ -233,87 +287,93 @@ soil_config = function(Csoil_init = 70.4,
     k_rom = k_rom,
     ftr = ftr,
     ini_Cin_top = Csoil_init * Cproptop,
-    ini_Cin_sub = Csoil_init * (1 - Cproptop)
-  ))
+    ini_Cin_sub = Csoil_init * (1 - Cproptop),
+    temp_method = temp_method,
+    temp_amplitude_hist = temp_amplitude_hist,
+    temp_offset = temp_offset,
+    temp_th_diff = temp_th_diff
+  )
 }
 
 
-
-#' Initial pool distribution parametrization
+#' Internal pool C:N initialization
 #'
-#' This function helps to modify the parametrization of the initial pool distribution
-#' according thesoil  C/N ratio.
-#' When the C/N ratio is above the threshold of 10.8, the initial content of C in ROM is adjusted upwards, so that the relative turnover
-#'rate is adjusted to the level determined by the function. The use of this procedure has a significant
-#'influence for national simulations, as there is a significant proportion of coarse sandy soils in
-#'Denmark with a high C/N ratio. If such a function is not used, the simulation of Danish sandy soils
-#'will exhibit clear declines in SOC, in contrast to the general build-up of SOC on these soils reported
-#'by Heidmann et al. (2001).
+#' Calculates initial pool carbon using the initial C:N ratio, HUM fraction,
+#' and initial carbon stock. This helper is used internally by
+#' `initialize_soil_pools()`.
 #'
-#' @param cn soil CN
-#' @param f_hum initial hum fraction
-#' @param f_rom initial rom fraction
-#' @param ini_Cin initial C inputs
+#' @param cn Numeric. Initial C:N ratio.
+#' @param HUM_frac Numeric. HUM fraction.
+#' @param C_0 Numeric. Initial carbon stock.
 #'
-#' @description
-#' A short description...
+#' @return Numeric initial pool carbon.
 #'
-#' @examples pool_cn(cn=12,HUM_frac = 0.33, C_0=75)
-.pool_cn = function(cn,
+#' @noRd
+.pool_cn <- function(cn,
                     f_hum,
                     f_rom,
                     ini_Cin,
                     soil_surf=c('top','sub')) {
 
+  soil_surf <- match.arg(soil_surf)
+
   CNfraction = min(56.2 * cn ^ (-1.69), 1)
 
 
-  hum = (ini_Cin * f_hum) * CNfraction
-  fom = ini_Cin *(1-f_hum-f_rom) # Modified after Ozan observation
-  rom = ini_Cin-hum-fom
+  hum <- (ini_Cin * f_hum) * CNfraction
+  fom <- ini_Cin *(1-f_hum-f_rom) # Modified after Ozan observation
+  rom <- ini_Cin-hum-fom
 
   if (soil_surf=='top') {
-    return(list(FOM_top=fom,
-                HUM_top=hum,
-                ROM_top=rom))
-  }
-  else {
-    return(list(FOM_sub=fom,
-                HUM_sub=hum,
-                ROM_sub=rom))
+   list(
+        FOM_top = fom,
+        HUM_top = hum,
+        ROM_top = rom
+    )
+  } else {
+   list(
+        FOM_sub = fom,
+        HUM_sub = hum,
+        ROM_sub = rom
+    )
   }
 }
 
 
 #' initialize_soil_pools
 #'
-#' @param cn soil carbon:nitrogen ratio
-#' @param soil_config soil configuration file (list)
+#'Initialize topsoil and subsoil carbon pools.
 #'
-#' @description
-#' initializes top and bottom soil pools
+#' @param cn Soil carbon:nitrogen ratio.
+#' @param soil_config Soil configuration list.
 #'
-#' @return list with the initialized top and bottom soil pool
+#' @return A list containing initialized topsoil and subsoil pools.
 #' @export
 #'
-#' @examples initialize_soil_pools(cn=15, soil_config = s_config)
-initialize_soil_pools = function(cn,
+#' @examples
+#' s_config <- soil_config()
+#' initialize_soil_pools(cn=15, soil_config = s_config)
+initialize_soil_pools <- function(cn,
                                  soil_config) {
 
-  ini_pool_top = .pool_cn(cn=cn,
+  ini_pool_top <- .pool_cn(
+                         cn=cn,
                          f_hum = soil_config$f_hum_top,
                          f_rom = soil_config$f_rom_top,
                          ini_Cin = soil_config$ini_Cin_top,
-                         'top')
-  ini_pool_sub = .pool_cn(cn=cn,
+                         soil_surf = 'top'
+                         )
+  ini_pool_sub <- .pool_cn(
+                         cn=cn,
                          f_hum = soil_config$f_hum_sub,
                          f_rom = soil_config$f_rom_sub,
                          ini_Cin = soil_config$ini_Cin_sub,
-                         'sub')
+                         'sub'
+                         )
 
-  return(list(
+  list(
     ini_pool_top,
     ini_pool_sub
-  ))
+  )
 }
 

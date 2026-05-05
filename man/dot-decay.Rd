@@ -2,30 +2,20 @@
 % Please edit documentation in R/Decomposition.R
 \name{.decay}
 \alias{.decay}
-\title{decay
-Decay of carbon function'
-The decay of carbon in each pool is described by first-order reaction kinetics
-where we have an specific decay rate coefficient in each pool that affects the
-actual C content in it (MgC/ha).The turnover is simulated in monthly time steps,
-where th decay rate is modify by the temp_coef() function.}
+\title{.decay}
 \usage{
 .decay(CO_t, k, tempCoefficient)
 }
 \arguments{
-\item{CO_t}{description}
+\item{CO_t}{Carbon amount in the pool at time t.}
 
-\item{k}{description}
+\item{k}{First-order decomposition rate constant.}
 
-\item{tempCoefficient}{description}
+\item{tempCoefficient}{Temperature response coefficient.}
 }
 \value{
-T
+Carbon change due to decomposition during the timestep.
 }
 \description{
-decay
-Decay of carbon function'
-The decay of carbon in each pool is described by first-order reaction kinetics
-where we have an specific decay rate coefficient in each pool that affects the
-actual C content in it (MgC/ha).The turnover is simulated in monthly time steps,
-where th decay rate is modify by the temp_coef() function.
+Calculate soil carbon loss by first-order decomposition.
 }

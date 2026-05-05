@@ -4,34 +4,33 @@
 \alias{set_monthly_temperature_data}
 \title{set_monthly_temperature_data}
 \usage{
-set_monthly_temperature_data(file = NULL, ...)
+set_monthly_temperature_data(file = NULL, Tavg = NULL)
 }
 \arguments{
-\item{file}{either filepath or a dataframe containing the temperature data}
+\item{file}{Either a filepath to a csv file or a data.frame containing
+monthly temperature data.}
 
-\item{...}{user can specify different arguments, see description}
-
-\item{coords}{vector of longitude and latitude}
-
-\item{start}{starting date, can be a year or a date (YYYY-MM-DD)}
-
-\item{end}{ending date, can be a year or a date (YYYY-MM-DD)}
-
-\item{Tavg}{numeric vector containing average monthly temperature; caution because it needs to match the number of timesteps}
-
-\item{Range}{numeric vector containing  monthly temperature ranges; caution because it needs to match the number of timesteps}
+\item{Tavg}{Numeric vector of average monthly temperature values.}
 }
 \value{
-dataframe with at least average temperature and temperature range, can include month and years, depending on approach
+A data.frame containing monthly temperature input data.
+  The output always contains `Tavg`.
 }
 \description{
-User can specify temperature data based on 3 approaches
-Approach 1 - directly specify a filepath or dataframe with temperature data by using the argument "file"
-Approach 2 - if the user does not have temperature data, coordinates and simulation period can be specified using the arguments "coords", "yr_start", "yr_end"
-Approach 3 - User can directly specify Average temperature and range in vectors using the argumemnts "Tavg" and "Range"
+Prepare monthly temperature input data for rCTOOL.
+}
+\details{
+Monthly temperature data can be provided in two ways:
+1. directly through the argument `file`, as a filepath or data.frame
+   containing monthly temperature data
+2. directly through the argument `Tavg`, as a numeric vector of average
+   monthly temperature values
 }
 \examples{
-set_monthly_temperature_data(file=df_temp)
-set_monthly_temperature_data(coords = c(9.114015,55.47163), yr_start=2006, yr_end=2010)
-set_monthly_temperature_data(Tavg = c(5,6,7,8,9,15,14,11,10,9,5,1), Range = c(3.5,5.5,6,6.5,12,6,4.4,8.8,11.1,13.1,6.6))
+df_temp <- data.frame(Tavg = c(5, 6, 7, 8, 9, 15, 14, 11, 10, 9, 5, 1))
+set_monthly_temperature_data(file = df_temp)
+
+set_monthly_temperature_data(
+  Tavg = c(5, 6, 7, 8, 9, 15, 14, 11, 10, 9, 5, 1)
+)
 }

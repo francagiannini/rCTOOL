@@ -4,10 +4,24 @@
 \alias{.soil_temp}
 \title{.soil_temp}
 \usage{
-.soil_temp(depth, month, T_ave, A_0, th_diff)
+.soil_temp(depth, month, T_ave, Amplitude, th_diff)
 }
 \arguments{
-\item{th_diff}{}
+\item{depth}{Soil layer reference depth in cm. In the default C-TOOL
+configuration, the model operates with two fixed layers:
+topsoil (25 cm) and subsoil (100 cm).}
+
+\item{month}{Month index (1 to 12).}
+
+\item{T_ave}{Monthly mean air temperature.}
+
+\item{Amplitude}{Annual temperature amplitude used in the soil temperature equation.}
+
+\item{th_diff}{Thermal diffusivity.}
+}
+\value{
+Soil temperature at the midpoint of the soil layer for the
+specified monthly timestep.
 }
 \description{
 .soil_temp

@@ -4,25 +4,32 @@
 \alias{FOM_sub_calculations}
 \title{FOM_sub_calculations}
 \usage{
-FOM_sub_calculations(
-  FOM_sub_t,
-  month,
-  t_avg = t_avg,
-  t_range = t_range,
-  s_config
-)
+FOM_sub_calculations(FOM_sub_t, month, t_avg, amplitude, s_config)
 }
 \arguments{
-\item{FOM_sub_t}{}
+\item{FOM_sub_t}{Numeric. Carbon content in FOM subsoil pool (Mg C ha-1).}
 
-\item{month}{}
+\item{month}{Integer. Month index (1–12).}
 
-\item{t_avg}{}
+\item{t_avg}{Numeric. Monthly mean air temperature (°C).}
 
-\item{t_range}{}
+\item{amplitude}{Numeric. Annual historical temperature amplitude
+used in the soil temperature function.}
 
-\item{s_config}{}
+\item{s_config}{List. Soil configuration parameters}
+}
+\value{
+A list with updated pool values and fluxes for FOM subsoil layer.
 }
 \description{
-FOM_sub_calculations
+Calculate FOM decomposition and carbon fluxes in the subsoil layer.
+}
+\examples{
+FOM_sub_calculations(
+  FOM_sub_t = 10,
+  month = 7,
+  t_avg = 15,
+  amplitude = 10,
+  s_config = soil_config()
+)
 }

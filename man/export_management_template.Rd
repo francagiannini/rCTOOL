@@ -7,20 +7,32 @@
 export_management_template(yr_start, yr_end, filepath)
 }
 \arguments{
-\item{yr_start}{initial simulation year}
+\item{yr_start}{Initial simulation year.}
 
-\item{yr_end}{end simulation year}
+\item{yr_end}{Final simulation year.}
 
-\item{filepath}{filepath where management template is to be exported}
+\item{filepath}{Filepath where management template will be exported.}
+}
+\value{
+The exported template as a data.frame.
 }
 \description{
-if user wants to specify monthly (or annual) C inputs and allocation fraction, it can export a template later to be read by the model
-note that all relevant columns are exported as 0, to be later populated by the user
-user needs to deleted columns that are not being used
-please ensure no double accounting in columns, for instance, by populating "plant_monthly_allocation" the user should not distinguish grass nor grain crops
-Furthermore, if user provides monthly C inputs, there is no need to populate allocation columns
-these conditions are not provided in the code and must be manually done with commmon sense
+Exports a template that can be used to provide management inputs for the
+model. The exported file includes monthly allocation variables and carbon
+input columns initialized with zeros, so they can be filled by the user
+before being read by the model.
+}
+\details{
+Users should keep only the columns relevant to their workflow and avoid
+double accounting among allocation variables. For example, when
+`plant_monthly_allocation` is used, grain and grass allocation columns
+should not be used simultaneously.
+
+If monthly carbon inputs are provided directly, additional allocation
+columns may not be needed. These consistency checks are not enforced
+automatically and must be handled by the user when preparing the input file.
 }
 \examples{
-export_management_template(2006, 2010, './Management_config.csv')
+path <- tempfile(fileext = ".csv")
+export_management_template(2006, 2010, path)
 }

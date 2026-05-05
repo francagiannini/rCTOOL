@@ -7,16 +7,17 @@
 initialize_soil_pools(cn, soil_config)
 }
 \arguments{
-\item{cn}{soil carbon:nitrogen ratio}
+\item{cn}{Soil carbon:nitrogen ratio.}
 
-\item{soil_config}{soil configuration file (list)}
+\item{soil_config}{Soil configuration list.}
 }
 \value{
-list with the initialized top and bottom soil pool
+A list containing initialized topsoil and subsoil pools.
 }
 \description{
-initializes top and bottom soil pools
+Initialize topsoil and subsoil carbon pools.
 }
 \examples{
+s_config <- soil_config()
 initialize_soil_pools(cn=15, soil_config = s_config)
 }

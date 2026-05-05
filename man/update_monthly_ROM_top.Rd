@@ -7,7 +7,12 @@
 update_monthly_ROM_top(ROM_top_t1, HUM_romified_top)
 }
 \arguments{
-\item{HUM_romified_top}{}
+\item{ROM_top_t1}{ROM content in the topsoil layer from the previous timestep.}
+
+\item{HUM_romified_top}{Romified HUM added to the topsoil ROM pool.}
+}
+\value{
+Updated ROM content in the topsoil layer after romified HUM additions.
 }
 \description{
 update_monthly_ROM_top
