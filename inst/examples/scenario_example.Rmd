@@ -1,0 +1,237 @@
+```{r setup, message=FALSE, warning=FALSE}
+library(rCTOOL)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+```
+## Management scenario example
+
+This example evaluates three contrasting management scenarios using the
+Askov dataset.
+
+The `scenario` object contains annual carbon inputs for three treatments,
+while `scenario_temperature` contains the corresponding monthly temperature
+input already prepared for rCTOOL, including monthly `Tavg` and historical
+`Amplitude`. 
+
+```{r}
+# load data ----
+data('scenario')
+data('scenario_temperature')
+
+scenario_temperature <- set_monthly_temperature_data_historical_amplitude(
+  file = scenario_temperature
+)
+
+```
+The scenario dataset contains three different management scenarios: a football court with ryegrass, an organic dairy farming and a pet cemitery. These scenarios differ in the quantity and timing of carbon inputs, which can be explored in terms of their implications for soil organic carbon dynamics using rCTOOL.
+```{r, echo=FALSE, message=FALSE, fig.width=10, fig.height=8}
+labels <- c(
+  Cin_top = "Plant C input to topsoil",
+  Cin_sub = "Plant C input to subsoil",
+  Cin_man = "Manure C input"
+)
+
+plot_df <- reshape2::melt(scenario, c("mon", "yrs", "id", "treatment"))
+
+plot_df <- plot_df |>
+  dplyr::group_by(yrs, treatment, variable) |>
+  dplyr::summarize(value = mean(value), .groups = "drop") |>
+  dplyr::mutate(
+    treatment = dplyr::recode(
+      treatment,
+      Football_ryegrass = "Football ryegrass",
+      Organic_dairy_farm = "Organic dairy farm",
+      Pet_cemitery = "Pet cemetery"
+    ),
+    treatment = factor(
+      treatment,
+      levels = c("Football ryegrass", "Organic dairy farm", "Pet cemetery")
+    )
+  )
+
+ggplot(
+  data = dplyr::filter(plot_df, value != 0),
+  aes(x = yrs, y = value, colour = treatment)
+) +
+  geom_line(linewidth = 1.0, alpha = 0.9) +
+  facet_wrap(
+    ~variable,
+    ncol = 1,
+    scales = "free_y",
+    labeller = as_labeller(labels)
+  ) +
+  labs(
+    title = "Carbon input across management scenarios",
+    subtitle = "Annual inputs to topsoil, subsoil and manure",
+    x = "Time (simulation year)",
+    y = expression("Carbon input (Mg C " * ha^{-1} * ")"),
+    colour = "Treatment"
+  ) +
+  scale_colour_manual(
+    values = c(
+      "Football ryegrass" = "#D55E5E",
+      "Organic dairy farm" = "#009E73",
+      "Pet cemetery" = "#4C78A8"
+    )
+  ) +
+  scale_x_continuous(
+    expand = expansion(mult = c(0.01, 0.01))
+  ) +
+  scale_y_continuous(
+    n.breaks = 4,
+    expand = expansion(mult = c(0.02, 0.1))
+  ) +
+  guides(colour = guide_legend(nrow = 1, override.aes = list(linewidth = 2))) +
+  theme_classic(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16, margin = margin(b = 5)),
+    plot.subtitle = element_text(size = 12, colour = "grey30", margin = margin(b = 15)),
+    strip.background = element_rect(fill = "grey97", colour = "grey80", linewidth = 0.4),
+    strip.text = element_text(face = "bold", size = 13),
+    axis.title = element_text(face = "bold", size = 14),
+    axis.text = element_text(colour = "black", size = 11),
+    axis.line = element_line(colour = "black", linewidth = 0.4),
+    axis.ticks = element_line(colour = "black", linewidth = 0.4),
+    panel.spacing = unit(1.5, "lines"),
+    legend.position = "bottom",
+    legend.title = element_text(face = "bold", size = 13),
+    legend.text = element_text(size = 12),
+    legend.margin = margin(t = 10)
+  )
+```
+Provide timeperiod, management and soil config; initialize soil pools.
+```{r}
+period <-  define_timeperiod(yr_start = 1951, yr_end = 2019)
+
+management  <-  management_config(
+  manure_monthly_allocation = c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+  plant_monthly_allocation = c(0, 0, 0, 8, 12, 16, 64, 0, 0, 0, 0, 0) / 100
+) # set to default
+
+soil  <-  soil_config(Csoil_init = 100,
+                   f_hum_top = 0.4803,
+                   f_rom_top = 0.4881,
+                   f_hum_sub = 0.3123,
+                   f_rom_sub = 0.6847,
+                   Cproptop = 0.47,
+                   clay_top = 0.1,
+                   clay_sub = 0.15,
+                   f_co2 = 0.628,
+                   f_romi = 0.012,
+                   k_fom  = 0.12,
+                   k_hum = 0.0028, 
+                   k_rom = 3.85e-5,
+                   ftr = 0.003,
+                   temp_th_diff = 0.35e-6)
+soil_pools  <-  initialize_soil_pools(cn = 10,
+                                      soil_config = soil)
+```
+
+Provide configuration for each treatment scenario.
+
+```{r}
+treatment  <-  unique(scenario$treatment)
+
+cin_treatment <- lapply(treatment, function(x) { define_Cinputs(management_filepath = dplyr::filter(scenario, treatment==x)) })
+names(cin_treatment)  <-  treatment
+```
+
+Run simulation for each treatment scenario.
+```{r}
+output_treatment <- lapply(treatment, function(x) {
+  output <- run_ctool(
+    time_config = period,
+    cin_config = cin_treatment[[x]],
+    m_config = management,
+    t_config = scenario_temperature,
+    s_config = soil,
+    soil_pools = soil_pools
+  )
+  output$treatment <- x
+  output
+})
+
+output_treatment <- data.table::rbindlist(output_treatment)
+head(output_treatment, 5)
+```
+
+Plot the impact on management of each treatment.
+```{r echo=FALSE, message=FALSE, fig.width=10, fig.height=8}
+labels_out <- c(
+  C_topsoil = "SOC topsoil",
+  C_subsoil = "SOC subsoil",
+  em_CO2_total = "CO2 emissions"
+)
+
+plot_df <- output_treatment[, c("mon", "yrs", "C_topsoil", "C_subsoil", "em_CO2_total", "treatment")]
+plot_df <- reshape2::melt(plot_df, id.vars = c("mon", "yrs", "treatment"))
+
+plot_df <- plot_df |>
+  dplyr::mutate(
+    treatment = dplyr::recode(
+      treatment,
+      Football_ryegrass = "Football ryegrass",
+      Organic_dairy_farm = "Organic dairy farm",
+      Pet_cemitery = "Pet cemetery"
+    ),
+    treatment = factor(
+      treatment,
+      levels = c("Football ryegrass", "Organic dairy farm", "Pet cemetery")
+    )
+  )
+
+ggplot(
+  plot_df,
+  aes(x = yrs, y = value, colour = treatment)
+) +
+  geom_line(linewidth = 0.8, alpha = 0.9) +
+   facet_wrap(
+    ~variable,
+    ncol = 1,
+    scales = "free_y",
+    labeller = as_labeller(labels_out)
+  ) +
+  labs(
+    title = "Simulated soil carbon dynamics across management scenarios",
+    subtitle = expression("Topsoil SOC, subsoil SOC and total CO"[2] * " emissions"),
+    x = "Time (year)",
+    y = expression("Output (Mg C " * ha^{-1} * ")"),
+    colour = "Treatment"
+  ) +
+  scale_colour_manual(
+    values = c(
+      "Football ryegrass" = "#D55E5E",
+      "Organic dairy farm" = "#009E73",
+      "Pet cemetery" = "#4C78A8"
+    )
+  ) +
+  scale_x_continuous(
+    breaks = c(1960, 1980, 2000, 2019),
+    expand = expansion(mult = c(0.01, 0.01))
+  ) +
+  scale_y_continuous(
+    n.breaks = 4,
+    expand = expansion(mult = c(0.02, 0.10))
+  ) +
+  guides(colour = guide_legend(nrow = 1, override.aes = list(linewidth = 2))) +
+  theme_classic(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16, margin = margin(b = 5)),
+    plot.subtitle = element_text(size = 12, colour = "grey30", margin = margin(b = 15)),
+    strip.background = element_rect(fill = "grey97", colour = "grey80", linewidth = 0.4),
+    strip.text = element_text(face = "bold", size = 13),
+    axis.title = element_text(face = "bold", size = 14),
+    axis.text = element_text(colour = "black", size = 11),
+    axis.line = element_line(colour = "black", linewidth = 0.4),
+    axis.ticks = element_line(colour = "black", linewidth = 0.4),
+    panel.spacing = unit(1.5, "lines"),
+    legend.position = "bottom",
+    legend.title = element_text(face = "bold", size = 13),
+    legend.text = element_text(size = 12),
+    legend.margin = margin(t = 10)
+  )
+```
+
+
