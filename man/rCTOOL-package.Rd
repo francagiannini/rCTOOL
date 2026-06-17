@@ -8,4 +8,14 @@
 \description{
 Provides an R interface to the C-TOOL soil carbon turnover model for simulating soil organic carbon dynamics in agricultural systems. The package supports the definition of carbon inputs, management schedules, soil parameters, and temperature forcing, and includes tools for scenario analysis and calibration of selected model parameters against observed soil organic carbon stocks.
 }
+\author{
+\strong{Maintainer}: Franca Giannini-Kurina \email{francagk@agro.au.dk}
+
+Authors:
+\itemize{
+  \item Evandro H. Figueiredo Moura da Silva \email{ehfmsilva@agro.au.dk}
+  \item João Serra
+}
+
+}
 \keyword{internal}
