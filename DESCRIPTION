@@ -2,8 +2,19 @@ Package: rCTOOL
 Type: Package
 Title: Soil Organic Carbon Turnover Modelling with C-TOOL
 Version: 3.1.0
-Author: Evandro H. Figueiredo Moura da Silva, João Serra, Franca Giannini-Kurina  
-Maintainer: Franca Giannini-Kurina <francagk@agro.au.dk>
+Authors@R: c(
+    person(given = c("Evandro", "H.", "Figueiredo", "Moura", "da"),
+           family = "Silva",
+           role = "aut",
+           email = "ehfmsilva@agro.au.dk"),
+    person(given = "João",
+           family = "Serra",
+           role = "aut"),
+    person(given = "Franca",
+           family = "Giannini-Kurina",
+           role = c("aut", "cre"),
+           email = "francagk@agro.au.dk")
+    )
 Description: Provides an R interface to the C-TOOL soil carbon turnover model
     for simulating soil organic carbon dynamics in agricultural systems. The
     package supports the definition of carbon inputs, management schedules, soil
